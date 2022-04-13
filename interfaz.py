@@ -3,7 +3,7 @@ from os import startfile
 from ProgramaComedor import *
 from tkinter import END, Tk, Entry,Label,Button, Toplevel
 from shutil import move
-from tkinter.filedialog import askopenfilename
+from tkinter.filedialog import askopenfilenames
 
 
 
@@ -170,7 +170,7 @@ def Mcedulas():
             Archivo = "Becados.xlsx"
 
         messagebox.showerror('FileNotFoundError',f'Agregue el archivo {Archivo} al directorio C:\SistemaComedor')
-        source = askopenfilename(title = 'Mover',filetypes=(('Excel files', '.xlsx'), ('Excel files', '.xlsx')))
+        source = askopenfilenames(title = 'Mover',filetypes=(('Excel files', '.xlsx'), ('Excel files', '.xlsx')))
         destination = 'C:\SistemaComedor'
         move(source, destination)
 
