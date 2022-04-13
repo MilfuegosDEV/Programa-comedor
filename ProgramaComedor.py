@@ -69,7 +69,6 @@ def VAPN(): # verifica los datos de plan nacional.
         if isnotEmpty(PlanNacional, Archivo) == True:
             return True
     except FileNotFoundError:
-        messagebox.showerror('FileNotFoundError',f'Agregue el archivo {Archivo} al directorio C:\SistemaComedor')
         return False
 VAPN()
 
@@ -92,7 +91,6 @@ def VAB(): # verifica los datos de las personas becadas.
         if isnotEmpty(Becas, Archivo) == True:
             return True
     except FileNotFoundError:
-        messagebox.showerror('FileNotFoundError',f'Agregue el archivo {Archivo} al directorio C:\SistemaComedor')
         return False
 
 

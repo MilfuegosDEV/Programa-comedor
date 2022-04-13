@@ -55,6 +55,7 @@ BCedulas.pack(side='right', padx = 90)
 
 
 def Mcedulas():
+    global VAPN, VAB
     
     
     
@@ -109,6 +110,7 @@ def Mcedulas():
 
     '''Cuando las personas inserten el numero de cedula presionando el botón o cuando usen el enter.'''
     def insertar_cedulas():
+
         '''En esta parte del programa se le pide a las personas que inserten su número de cédulas
         Luego lo que hace es validar si el número de cédulas están en:
         1. Plan Nacional.
@@ -161,7 +163,18 @@ def Mcedulas():
 
     """Interfaz del la ventana del botón insertar cédulas."""
 
-    if VAPN() == True and VAB() == True:
+    if VAPN() is False or VAB() is False:
+        if VAB() is True and VAPN() is False:
+            Archivo = 'PlanNacional.xlsx'
+        else:
+            Archivo = "Becados.xlsx"
+
+        messagebox.showerror('FileNotFoundError',f'Agregue el archivo {Archivo} al directorio C:\SistemaComedor')
+        source = askopenfilename(title = 'Mover',filetypes=(('Excel files', '.xlsx'), ('Excel files', '.xlsx')))
+        destination = 'C:\SistemaComedor'
+        move(source, destination)
+
+    elif VAPN() is True and VAB() is True:
         root.withdraw()
         child = Toplevel(root) 
         child.geometry('1278x700')# a la ventana no se le podrá cambiar el tamaño
@@ -184,12 +197,8 @@ def Mcedulas():
                                 )
         Insertar_Cedulas.pack()
 
-
-    else:
-        source = askopenfilename(title = 'Mover',filetypes=(('Excel files', '.xlsx'), ('Excel files', '.xlsx')))
-        destination = 'C:\SistemaComedor'
-        move(source, destination)
-    child.wm_protocol("WM_DELETE_WINDOW", on_closing)
+        child.wm_protocol("WM_DELETE_WINDOW", on_closing)
+        
 
 
 
