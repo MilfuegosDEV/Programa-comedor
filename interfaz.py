@@ -3,7 +3,7 @@ from os import startfile
 from ProgramaComedor import *
 from tkinter import END, Tk, Entry,Label,Button, Toplevel
 from shutil import move
-from tkinter.filedialog import askopenfilename
+from tkinter.filedialog import askopenfilenames
 
 
 
@@ -55,19 +55,17 @@ BCedulas.pack(side='right', padx = 90)
 
 
 def Mcedulas():
-    global VAPN, VAB
-    
-    
-    
-    
-    
-    '''La siguiente función cambia de color dependiendo el grupo en el cual este la persona
-    toma como parametros:
-    1. color que pueden ser ["light green", "brown2", "gold"]
-    2. texto que puede ser ["Es de plan nacional", "Es becado", "Tiene que comprar almuerzo", "Ya comió"]'''
+    global VAPN, VAB, cedulas, PlanNacional, Becas
+
     
     
     def colores (color, text): 
+
+        '''La siguiente función cambia de color dependiendo el grupo en el cual este la persona
+        toma como parametros:
+        1. color que pueden ser ["light green", "brown2", "gold"]
+        2. texto que puede ser ["Es de plan nacional", "Es becado", "Tiene que comprar almuerzo", "Ya comió"]'''
+
         colores = Toplevel(child)
         colores.geometry('700x400')
         colores.config(bg = color)
@@ -161,19 +159,27 @@ def Mcedulas():
 
 
 
-    """Interfaz del la ventana del botón insertar cédulas."""
-
+    # si no esta la ventana salta para buscar los archivos y moverlos
     if VAPN() is False or VAB() is False:
+
+        '''Hay un bug en esta parte del código
+        cuando añado los archivos todo corre normal, pero
+        cuando verifico las cedulas no aparencen en el grupo que deberían estar'''
+
         if VAB() is True and VAPN() is False:
             Archivo = 'PlanNacional.xlsx'
         else:
             Archivo = "Becados.xlsx"
 
         messagebox.showerror('FileNotFoundError',f'Agregue el archivo {Archivo} al directorio C:\SistemaComedor')
-        source = askopenfilename(title = 'Mover',filetypes=(('Excel files', '.xlsx'), ('Excel files', '.xlsx')))
+        source = askopenfilenames(title = 'Mover',filetypes=(('Excel files', '.xlsx'), ('Excel files', '.xlsx')))
         destination = 'C:\SistemaComedor'
-        move(source, destination)
+        for files in source:
 
+            move(files, destination)
+        exit()
+
+    # """Interfaz del la ventana del botón insertar cédulas."""
     elif VAPN() is True and VAB() is True:
         root.withdraw()
         child = Toplevel(root) 
