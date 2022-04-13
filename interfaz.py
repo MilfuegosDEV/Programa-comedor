@@ -5,7 +5,25 @@ from tkinter import END, Tk, Entry,Label,Button, Toplevel
 from shutil import move
 from tkinter.filedialog import askopenfilename
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # interfaz
+"""Menú principal"""
 mkdir()
 root = Tk() 
 root.geometry('1278x700')# a la ventana no se le podrá cambiar el tamaño
@@ -32,37 +50,37 @@ BCedulas.config(text= 'Ingresar\ncédulas',
 BCedulas.pack(side='right', padx = 90)
 
 # ventanas hijas
+
+"""Cuando presionamos el botón de insertar cédula el programa ejecutará las siguientes indicaciones"""
+
+
 def Mcedulas():
+    
+    
+    
+    
+    
     '''La siguiente función cambia de color dependiendo el grupo en el cual este la persona
     toma como parametros:
     1. color que pueden ser ["light green", "brown2", "gold"]
     2. texto que puede ser ["Es de plan nacional", "Es becado", "Tiene que comprar almuerzo", "Ya comió"]'''
+    
+    
     def colores (color, text): 
         colores = Toplevel(child)
-        colores.geometry('500x300')
+        colores.geometry('700x400')
         colores.config(bg = color)
         colores.resizable(0,0)
-        columna1 = Label(colores)
-        columna1.config(bg = 'black', 
-                        height= 18
-                        )
-        columna1.place(x = 0, y = 12)
 
-
-        columna2 = Label(colores)
-        columna2.config(bg = 'black', 
-                        height= 18
-                        )
-        columna2.place(x = 494, y = 12)
         label = Label(colores)
         label.config(bg = 'black',
                 fg = 'white',
-                font = 'Times_new_roman 20',
+                font = 'FiraCode 40',
                 text = text,
                 width  = 22,
                 height= 1
                 )
-        label.place(x = 68, y = 95)
+        label.pack(pady = 130)
 
         def ocultar():
             colores.destroy()
@@ -73,12 +91,12 @@ def Mcedulas():
 
 
 
+    # Sirve para que cuando presione enter emule el funcionamiento de presionar un botón 
     def enter (event):
-        # Sirve para que cuando presione enter emule el funcionamiento de presionar un botón 
         insertar_cedulas()
 
 
-
+    # cuando cerremos la ventana se guardarán los datos.
     def on_closing():
         GuardarRegistro()
         ventas.clear()
@@ -89,7 +107,7 @@ def Mcedulas():
 
 
 
-
+    '''Cuando las personas inserten el numero de cedula presionando el botón o cuando usen el enter.'''
     def insertar_cedulas():
         '''En esta parte del programa se le pide a las personas que inserten su número de cédulas
         Luego lo que hace es validar si el número de cédulas están en:
@@ -132,15 +150,16 @@ def Mcedulas():
                 PlanUsado.clear()
                 BecasUsadas.clear()
 
-
+        # cuando existe un caracter incorrecto aparecerá un mensaje de que hay letras, y el programa solo admite numeros.
         except ValueError:
             messagebox.showinfo('Valores no admitidos', 'Las cédulas no llevan letras.')
-        except NameError:
-            messagebox.showinfo('Valores no admitidos', 'Las cédulas no llevan letras.')
-        except KeyError:
-            messagebox.showinfo('Valores no admitidos', 'Las cédulas no llevan letras.')
-        except SyntaxError:
-            messagebox.showinfo('Valores no admitidos', 'Las cédulas no llevan letras.')
+            entry.delete(0, END)
+
+
+
+
+
+    """Interfaz del la ventana del botón insertar cédulas."""
 
     if VAPN() == True and VAB() == True:
         root.withdraw()

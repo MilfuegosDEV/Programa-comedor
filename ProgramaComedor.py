@@ -89,8 +89,6 @@ def VAB(): # verifica los datos de las personas becadas.
                 Becas.clear()
                 break
 
-
-        print(Becas)
         if isnotEmpty(Becas, Archivo) == True:
             return True
     except FileNotFoundError:
@@ -99,9 +97,11 @@ def VAB(): # verifica los datos de las personas becadas.
 
 
 VAB()
-def GuardarRegistro(): # Guarda los registros que se generan.
-    global PlanNacional,PlanUsado,Becas,BecasUsadas,ventas,cedula
-    makedirs(r'C:\SistemaComedor\Reportes', exist_ok=True)
+
+
+def GuardarRegistro():
+    global PlanUsado, BecasUsadas, ventas
+    makedirs(r'C:\SistemaComedor\reportes', exist_ok=True)
     while True:
         try:
             fecha = str(datetime.today().strftime('%m-%y'))
@@ -131,9 +131,6 @@ def GuardarRegistro(): # Guarda los registros que se generan.
                 ws[f'C{i}'] = 'Ventas'
                 ws[f'D{i}'] = hoy
                 i += 1
-            ventas.clear()
-            PlanUsado.clear()
-            BecasUsadas.clear()
             ws.protection.enable() # rehabilita la protección del archivo para que no pueda ser modificado. 
             archivo.save(r'C:\SistemaComedor\reportes\Reporte '+ fecha+'.xlsx')
             break
@@ -153,3 +150,4 @@ def GuardarRegistro(): # Guarda los registros que se generan.
         except PermissionError:
             messagebox.showwarning('Reporte abierto',f"Por Favor cierre el archivo antes de continuar 'Reporte {fecha}.xlsx'")
             continue
+
