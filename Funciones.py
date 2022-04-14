@@ -3,8 +3,8 @@ La idea es verificar mediante un código de baras las cédulas que estan en la b
 para una mayor facilidad para las personas encargadas del comedor se trabajará con archivos '.xlsx'
 """
 # Módulos
-
-from os import makedirs,startfile   
+from sys import exit    
+from os import makedirs,startfile  
 from tkinter import messagebox
 from tkinter.filedialog import askopenfilenames
 import pandas as pd
@@ -186,9 +186,9 @@ def abrir_basededatos():
     source = askopenfilenames(initialdir= r"C:\SistemaComedor")
     for files in source:
         startfile(files)
-    question = messagebox.askyesno('Importante', "¿Realizo alguno cambio en los archivos?")
+    question = messagebox.askyesno('Importante', "¿Realizó algún cambio en los archivos?")
     if  question == True: # si los reportes fueron modificados cierra el programa
-        messagebox.showinfo('Importante', 'va a tener que abrir el programa nuevamente')
+        messagebox.showinfo('Importante', 'Va a tener que abrir el programa nuevamente')
         exit()
     else:
         pass
