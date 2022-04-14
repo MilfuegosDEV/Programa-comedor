@@ -4,7 +4,7 @@
 
 ### 
 
-#### [Presione aquí para desacargar](https://github.com/MilfuegosxD/programa/raw/master/programa%20ejecutable.zip)
+#### [Presione aquí para descargar](https://github.com/MilfuegosxD/programa/raw/master/programa%20ejecutable.zip)
 
 Este programa registrará a las personas personas que usan el comedor y da un reporte mensual que se irá actualizando diariamente.
 
