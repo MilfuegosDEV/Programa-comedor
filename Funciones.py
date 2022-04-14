@@ -154,7 +154,7 @@ def GuardarRegistro():
 
 ''''------------------------------------------------------------------------------------------------------------------'''
 
-def en_encasodeerror():
+def en_encasodeerror(): # en el caso de que haya un erro el programa ejecutará esta función
     if VAB() is True and VAPN() is False:
             Archivo = 'PlanNacional.xlsx'
     else:
@@ -187,7 +187,7 @@ def abrir_basededatos():
     for files in source:
         startfile(files)
     question = messagebox.askyesno('Importante', "¿Realizo alguno cambio en los archivos?")
-    if  question == True:
+    if  question == True: # si los reportes fueron modificados cierra el programa
         messagebox.showinfo('Importante', 'va a tener que abrir el programa nuevamente')
         exit()
     else:
