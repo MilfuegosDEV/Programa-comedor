@@ -70,7 +70,7 @@ def VAPN(): # verifica los datos de plan nacional.
             return True
     except FileNotFoundError:
         return False
-VAPN()
+
 
 def VAB(): # verifica los datos de las personas becadas.
     global Becas
@@ -94,7 +94,7 @@ def VAB(): # verifica los datos de las personas becadas.
         return False
 
 
-VAB()
+
 
 
 def GuardarRegistro():

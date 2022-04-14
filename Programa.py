@@ -1,26 +1,9 @@
 # Interfaz del programa
 from os import startfile
-from ProgramaComedor import *
-from tkinter import END, Tk, Entry,Label,Button, Toplevel
+from Funciones import *
+from tkinter import END, Tk, Entry,Label,Button, Toplevel, messagebox
 from shutil import move
 from tkinter.filedialog import askopenfilenames
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 # interfaz
 """Menú principal"""
@@ -34,10 +17,25 @@ msg.config(text='Sistema Comedor', font = "FiraCode 60 underline",background='bl
 msg.pack(side= 'top', fill='x', pady= 30)
 
 Bases = Button(root)
-Bases.config(text= 'Revisar\narchivos', font = 'FiraCode 40 italic overstrike', width= 15, background='black', activebackground='black', foreground='white', activeforeground='white', borderwidth= 6)
+Bases.config(text= 'Revisar\narchivos', 
+            font = 'FiraCode 40 italic overstrike',     
+            width= 15, background='black', 
+            activebackground='black', 
+            foreground='white', 
+            activeforeground='white', 
+            borderwidth= 6,
+            command=lambda: archivos()
+            )
 Bases.pack(side='left', padx = 90)
 
+
+
+
+
+
 BCedulas = Button(root)
+
+
 BCedulas.config(text= 'Ingresar\ncédulas', 
                 font = 'FiraCode 40 italic overstrike', 
                 width= 15, background='black', 
@@ -48,6 +46,11 @@ BCedulas.config(text= 'Ingresar\ncédulas',
                 command=lambda: Mcedulas()
                 )
 BCedulas.pack(side='right', padx = 90)
+
+
+
+
+
 
 # ventanas hijas
 
@@ -162,9 +165,6 @@ def Mcedulas():
     # si no esta la ventana salta para buscar los archivos y moverlos
     if VAPN() is False or VAB() is False:
 
-        '''Hay un bug en esta parte del código
-        cuando añado los archivos todo corre normal, pero
-        cuando verifico las cedulas no aparencen en el grupo que deberían estar'''
 
         if VAB() is True and VAPN() is False:
             Archivo = 'PlanNacional.xlsx'
@@ -204,7 +204,135 @@ def Mcedulas():
         Insertar_Cedulas.pack()
 
         child.wm_protocol("WM_DELETE_WINDOW", on_closing)
-        
+
+
+'''Cuando presionan el botón de archivos'''
+def archivos():
+    global VAB, VAPN
+
+    def on_closing():
+        child.destroy()
+        root.deiconify()
+
+
+    
+    def abrir_reportes():
+        # abre todos los reportes que han sido seleccionados.
+        source = askopenfilenames(initialdir= r"C:\SistemaComedor\Reportes")
+        for files in source:
+            startfile(files)
+
+    def abrir_basededatos():
+        # abre los archivos que han sido seleccionados
+        source = askopenfilenames(initialdir= r"C:\SistemaComedor")
+        messagebox.showinfo('Importante', 'Si edita un archivo por favor reinicie el programa.')    
+        for files in source:
+            startfile(files)
+
+            
+
+
+    if VAPN() is False or VAB() is False:
+
+        if VAB() is True and VAPN() is False:
+            Archivo = 'PlanNacional.xlsx'
+        else:
+            Archivo = "Becados.xlsx"
+
+        messagebox.showerror('FileNotFoundError',f'Agregue el archivo {Archivo} al directorio C:\SistemaComedor')
+        source = askopenfilenames(title = 'Mover',filetypes=(('Excel files', '.xlsx'), ('Excel files', '.xlsx')))
+        destination = 'C:\SistemaComedor'
+        for files in source:
+
+            move(files, destination)
+        exit()
+
+    # """Interfaz del la ventana del botón insertar cédulas."""
+    elif VAPN() is True and VAB() is True:
+        root.withdraw()
+        child = Toplevel(root)
+        child.geometry('1278x700')
+        child.config(background='#380106')
+
+        msg = Label(child)
+        msg.config(text = 'ARCHIVOS', font = "FiraCode 60 underline",background='black',foreground='white', width= 60)
+        msg.pack(side= 'top', fill='x', pady= 30)
+
+        Bases = Button(child)
+        Bases.config(text= 'Revisar\nbase de datos', 
+                    font = 'FiraCode 40 italic overstrike', 
+                    width= 15, 
+                    background='black', 
+                    activebackground='black', 
+                    foreground='white', 
+                    activeforeground='white', 
+                    borderwidth= 6,
+                    command = lambda: abrir_basededatos()
+                    )
+        Bases.pack(side='left', padx = 90)
+
+        reportes = Button(child)
+        reportes.config(text= 'Revisar\nreportes', 
+                        font = 'FiraCode 40 italic overstrike', 
+                        width= 15, background='black', 
+                        activebackground='black', 
+                        foreground='white', 
+                        activeforeground='white', 
+                        borderwidth= 6,
+                        command=lambda: abrir_reportes()
+                        )
+        reportes.pack(side='right', padx = 90)
+        child.protocol("WM_DELETE_WINDOW", on_closing)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
