@@ -1,14 +1,14 @@
 # Interfaz del programa
 
-from os import startfile
 from Funciones import *
 from tkinter import END, Tk, Entry,Label,Button, Toplevel, messagebox
 
-from tkinter.filedialog import askopenfilenames
 
-# interfaz
-"""Menú principal"""
+
 mkdir()
+# interfaz
+
+"""Menú principal"""
 root = Tk() 
 root.geometry('1278x700')# a la ventana no se le podrá cambiar el tamaño
 root.title("Comedor")
@@ -31,10 +31,6 @@ Bases.config(text= 'Revisar\narchivos',
 Bases.pack(side='left', padx = 90)
 
 
-
-
-
-
 BCedulas = Button(root)
 
 
@@ -52,18 +48,17 @@ BCedulas.pack(side='right', padx = 90)
 
 
 
-
-
 # ventanas hijas
 
 """Cuando presionamos el botón de insertar cédula el programa ejecutará las siguientes indicaciones"""
 
 
+''''------------------------------------------------------------------------------------------------------------------'''
 def Mcedulas():
     global VAPN, VAB, cedulas, PlanNacional, Becas
 
     
-    
+    """------------------------------------------------------------------------------------------------------------"""
     def colores (color, text): 
 
         '''La siguiente función cambia de color dependiendo el grupo en el cual este la persona
@@ -85,7 +80,7 @@ def Mcedulas():
                 height= 1
                 )
         label.pack(pady = 130)
-
+        '''----------------------------------------------------------------------------------------------------'''
         def ocultar():
             colores.destroy()
         colores.after(1000,ocultar)
@@ -96,11 +91,14 @@ def Mcedulas():
 
 
     # Sirve para que cuando presione enter emule el funcionamiento de presionar un botón 
+
+    """------------------------------------------------------------------------------------------------------------"""
     def enter (event):
         insertar_cedulas()
 
 
     # cuando cerremos la ventana se guardarán los datos.
+    """------------------------------------------------------------------------------------------------------------"""
     def on_closing():
         GuardarRegistro()
         ventas.clear()
@@ -112,6 +110,7 @@ def Mcedulas():
 
 
     '''Cuando las personas inserten el numero de cedula presionando el botón o cuando usen el enter.'''
+    """------------------------------------------------------------------------------------------------------------"""
     def insertar_cedulas():
 
         '''En esta parte del programa se le pide a las personas que inserten su número de cédulas
@@ -169,6 +168,7 @@ def Mcedulas():
         en_encasodeerror()
 
     # """Interfaz del la ventana del botón insertar cédulas."""
+
     elif VAPN() is True and VAB() is True:
         root.withdraw()
         child = Toplevel(root) 
@@ -195,36 +195,16 @@ def Mcedulas():
         child.wm_protocol("WM_DELETE_WINDOW", on_closing)
 
 
+
 '''Cuando presionan el botón de archivos'''
+
+''''------------------------------------------------------------------------------------------------------------------'''
 def archivos():
     global VAB, VAPN
 
     def on_closing():
         child.destroy()
         root.deiconify()
-
-
-    
-    def abrir_reportes():
-        # abre todos los reportes que han sido seleccionados.
-        source = askopenfilenames(initialdir= r"C:\SistemaComedor\Reportes")
-        for files in source:
-            startfile(files)
-
-    def abrir_basededatos():
-        # abre los archivos que han sido seleccionados
-        source = askopenfilenames(initialdir= r"C:\SistemaComedor")
-        for files in source:
-            startfile(files)
-        question = messagebox.askyesno('Importante', "¿Realizo alguno cambio en los archivos?")
-        if  question == True:
-            messagebox.showinfo('Importante', 'va a tener que abrir el programa nuevamente')
-            exit()
-        else:
-            pass
-
-            
-
 
     if VAPN() is False or VAB() is False:
         en_encasodeerror()
@@ -265,66 +245,8 @@ def archivos():
                         command=lambda: abrir_reportes()
                         )
         reportes.pack(side='right', padx = 90)
-        
 
         child.protocol("WM_DELETE_WINDOW", on_closing)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 root.mainloop()

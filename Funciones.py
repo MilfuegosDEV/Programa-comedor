@@ -24,22 +24,15 @@ cedulas = [] # acá se almacenarán todas las cédulas que han sido registradas 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 # Programa...
+
+''''------------------------------------------------------------------------------------------------------------------'''
+
 def mkdir (): # crea una carpeta donde se guardarán los archivos.
     makedirs(r'C:\SistemaComedor', exist_ok=True)
 
+
+''''------------------------------------------------------------------------------------------------------------------'''
 
 def isnotEmpty(data_structure, file): # verifica si los datos están en el formato correcto.
     if (len(data_structure) > 0):
@@ -75,6 +68,10 @@ def VAPN(): # verifica los datos de plan nacional.
         return False
 
 VAPN()
+
+
+''''------------------------------------------------------------------------------------------------------------------'''
+
 def VAB(): # verifica los datos de las personas becadas.
     global Becas
     Archivo = 'Becados.xlsx' # funciona para cuando el programa tire un error y saber en cual parte esta el error.
@@ -97,6 +94,9 @@ def VAB(): # verifica los datos de las personas becadas.
         return False
 VAB()
 
+
+
+''''------------------------------------------------------------------------------------------------------------------'''
 
 
 def GuardarRegistro():
@@ -151,6 +151,9 @@ def GuardarRegistro():
             messagebox.showwarning('Reporte abierto',f"Por Favor cierre el archivo antes de continuar 'Reporte {fecha}.xlsx'")
             continue
 
+
+''''------------------------------------------------------------------------------------------------------------------'''
+
 def en_encasodeerror():
     if VAB() is True and VAPN() is False:
             Archivo = 'PlanNacional.xlsx'
@@ -165,3 +168,30 @@ def en_encasodeerror():
         move(files, destination)
     messagebox.showinfo('Importante', 'Abra nuevamente el programa')
     exit()
+
+
+''''------------------------------------------------------------------------------------------------------------------'''
+
+def abrir_reportes():
+    # abre todos los reportes que han sido seleccionados.
+    source = askopenfilenames(initialdir= r"C:\SistemaComedor\Reportes")
+    for files in source:
+        startfile(files)
+
+
+''''------------------------------------------------------------------------------------------------------------------'''
+
+def abrir_basededatos():
+    # abre los archivos que han sido seleccionados
+    source = askopenfilenames(initialdir= r"C:\SistemaComedor")
+    for files in source:
+        startfile(files)
+    question = messagebox.askyesno('Importante', "¿Realizo alguno cambio en los archivos?")
+    if  question == True:
+        messagebox.showinfo('Importante', 'va a tener que abrir el programa nuevamente')
+        exit()
+    else:
+        pass
+
+
+''''------------------------------------------------------------------------------------------------------------------'''
