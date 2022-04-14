@@ -1,8 +1,9 @@
 # Interfaz del programa
+
 from os import startfile
 from Funciones import *
 from tkinter import END, Tk, Entry,Label,Button, Toplevel, messagebox
-from shutil import move
+
 from tkinter.filedialog import askopenfilenames
 
 # interfaz
@@ -10,6 +11,7 @@ from tkinter.filedialog import askopenfilenames
 mkdir()
 root = Tk() 
 root.geometry('1278x700')# a la ventana no se le podrá cambiar el tamaño
+root.title("Comedor")
 root.config(background='#380106')
 
 msg = Label(root)
@@ -164,20 +166,7 @@ def Mcedulas():
 
     # si no esta la ventana salta para buscar los archivos y moverlos
     if VAPN() is False or VAB() is False:
-
-
-        if VAB() is True and VAPN() is False:
-            Archivo = 'PlanNacional.xlsx'
-        else:
-            Archivo = "Becados.xlsx"
-
-        messagebox.showerror('FileNotFoundError',f'Agregue el archivo {Archivo} al directorio C:\SistemaComedor')
-        source = askopenfilenames(title = 'Mover',filetypes=(('Excel files', '.xlsx'), ('Excel files', '.xlsx')))
-        destination = 'C:\SistemaComedor'
-        for files in source:
-
-            move(files, destination)
-        exit()
+        en_encasodeerror()
 
     # """Interfaz del la ventana del botón insertar cédulas."""
     elif VAPN() is True and VAB() is True:
@@ -225,27 +214,21 @@ def archivos():
     def abrir_basededatos():
         # abre los archivos que han sido seleccionados
         source = askopenfilenames(initialdir= r"C:\SistemaComedor")
-        messagebox.showinfo('Importante', 'Si edita un archivo por favor reinicie el programa.')    
         for files in source:
             startfile(files)
+        question = messagebox.askyesno('Importante', "¿Realizo alguno cambio en los archivos?")
+        if  question == True:
+            messagebox.showinfo('Importante', 'va a tener que abrir el programa nuevamente')
+            exit()
+        else:
+            pass
 
             
 
 
     if VAPN() is False or VAB() is False:
+        en_encasodeerror()
 
-        if VAB() is True and VAPN() is False:
-            Archivo = 'PlanNacional.xlsx'
-        else:
-            Archivo = "Becados.xlsx"
-
-        messagebox.showerror('FileNotFoundError',f'Agregue el archivo {Archivo} al directorio C:\SistemaComedor')
-        source = askopenfilenames(title = 'Mover',filetypes=(('Excel files', '.xlsx'), ('Excel files', '.xlsx')))
-        destination = 'C:\SistemaComedor'
-        for files in source:
-
-            move(files, destination)
-        exit()
 
     # """Interfaz del la ventana del botón insertar cédulas."""
     elif VAPN() is True and VAB() is True:
@@ -259,7 +242,7 @@ def archivos():
         msg.pack(side= 'top', fill='x', pady= 30)
 
         Bases = Button(child)
-        Bases.config(text= 'Revisar\nbase de datos', 
+        Bases.config(text= 'Editar\nbase de datos', 
                     font = 'FiraCode 40 italic overstrike', 
                     width= 15, 
                     background='black', 
@@ -270,7 +253,7 @@ def archivos():
                     command = lambda: abrir_basededatos()
                     )
         Bases.pack(side='left', padx = 90)
-
+        
         reportes = Button(child)
         reportes.config(text= 'Revisar\nreportes', 
                         font = 'FiraCode 40 italic overstrike', 
@@ -282,6 +265,8 @@ def archivos():
                         command=lambda: abrir_reportes()
                         )
         reportes.pack(side='right', padx = 90)
+        
+
         child.protocol("WM_DELETE_WINDOW", on_closing)
 
 

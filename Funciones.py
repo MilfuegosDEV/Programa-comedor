@@ -4,11 +4,13 @@ para una mayor facilidad para las personas encargadas del comedor se trabajará 
 """
 # Módulos
 
-from os import makedirs
+from os import makedirs,startfile   
 from tkinter import messagebox
+from tkinter.filedialog import askopenfilenames
 import pandas as pd
 from openpyxl import load_workbook, Workbook
 from datetime import datetime
+from shutil import move
 
 
 # Variables
@@ -44,6 +46,7 @@ def isnotEmpty(data_structure, file): # verifica si los datos están en el forma
         return True
     else:
         messagebox.showwarning("Formato incorrecto", f"El archivo {file} está en un formato incorrecto.")
+        startfile(fr"C:\SistemaComedor\{file}")
         return False
 
 
@@ -71,7 +74,7 @@ def VAPN(): # verifica los datos de plan nacional.
     except FileNotFoundError:
         return False
 
-
+VAPN()
 def VAB(): # verifica los datos de las personas becadas.
     global Becas
     Archivo = 'Becados.xlsx' # funciona para cuando el programa tire un error y saber en cual parte esta el error.
@@ -92,8 +95,7 @@ def VAB(): # verifica los datos de las personas becadas.
             return True
     except FileNotFoundError:
         return False
-
-
+VAB()
 
 
 
@@ -149,3 +151,17 @@ def GuardarRegistro():
             messagebox.showwarning('Reporte abierto',f"Por Favor cierre el archivo antes de continuar 'Reporte {fecha}.xlsx'")
             continue
 
+def en_encasodeerror():
+    if VAB() is True and VAPN() is False:
+            Archivo = 'PlanNacional.xlsx'
+    else:
+        Archivo = "Becados.xlsx"
+
+    messagebox.showerror('FileNotFoundError',f'Agregue el archivo {Archivo} al directorio C:\SistemaComedor')
+    source = askopenfilenames(title = 'Mover',filetypes=(('Excel files', '.xlsx'), ('Excel files', '.xlsx')))
+    destination = 'C:\SistemaComedor'
+    for files in source:
+
+        move(files, destination)
+    messagebox.showinfo('Importante', 'Abra nuevamente el programa')
+    exit()
