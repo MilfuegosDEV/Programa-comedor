@@ -1,4 +1,5 @@
-# Módulos
+# Para instalar los módulos necesarios debes escribir
+#pip install -r requirements.txt
 from tkinter import END, Entry, PhotoImage, Tk, Label, Button, Toplevel, messagebox; from tkinter.filedialog import askopenfilenames; from PIL import Image, ImageTk
 import pandas as pd; from openpyxl import load_workbook, Workbook 
 from datetime import datetime; import time 
