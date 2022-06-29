@@ -2,224 +2,21 @@
 from tkinter import END, Entry, PhotoImage, Tk, Label, Button, Toplevel, messagebox
 from tkinter.filedialog import askopenfilenames; 
 from PIL import Image, ImageTk
-import pandas as pd 
+
 from openpyxl import load_workbook, Workbook 
 from datetime import datetime
-import time 
-import shutil
-import sys
-import os 
-import json
 
 
-PersonasDelComedor = {} # guardará los datos de las personas que estan en el archivo
+from modules.ExcelFiles import ExcelFiles as xlF
+from modules.__resource_path import resource_path
+
+
 UsaronElComedor = {} # Datos de todas las personas que utilizaron el comedor.
 CedulasRegistradas = [] # cedulas que fueron registradas durante la ejecución del programa.
 
-actual = time.strftime('%d-%m-%y') 
+ef = xlF('Test')
 Font_tuple = ("Comic Sans MS", 20)
 file_tuples = ('Excel files', '.xlsx'), ('All files', '.')
-
-
-
-
-
-
-def resource_path(relative_path):
-    """ Get absolute path to resource, works for dev and for PyInstaller """
-    try:
-        # PyInstaller creates a temp folder and stores path in _MEIPASS
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath(".")
-
-    return os.path.join(base_path, relative_path)
-
-
-
-
-
-
-
-
-def cargar_json():
-    """Se cargar los datos de las personas que fueron al comedor durante el día"""
-    global CedulasRegistradas
-
-    try:
-        with open(f'C:\SistemaComedor\Diario\RegistroDelDía{actual}.json', 'r') as File:
-            CedulasRegistradas = json.load(File)
-    except FileNotFoundError:
-        editar_json()
-
-
-
-
-
-def editar_json():
-    """Edita el reporte diario, o directamente lo crea"""
-    os.makedirs('C:\SistemaComedor\Diario', exist_ok= True) 
-    os.system('attrib +h C:\SistemaComedor\Diario')
-    
-    with open(f'C:\SistemaComedor\Diario\RegistroDelDía{actual}.json', 'w') as File:
-        json.dump(CedulasRegistradas, File, indent=4)
-        File.close()
-
-
-
-
-
-def isnotEmpty(data_structure): 
-    """Verifica los archivos no esten vacíos"""
-    if (len(data_structure) > 0):
-        # si el archivo no esta vacio retorna true
-        return True
-
-    else:
-        # retorna false
-        messagebox.showwarning('FORMATO INCORRECTO', 'EL ARCHIVO DEBE IR EN EL SIGUIENTE FORMATO\nCedula, Nombre, Sección, Grupo')
-        os.startfile(r'C:\SistemaComedor\Comedor.xlsx')
-        return False
-
-
-
-
-
-
-
-def Archivo_no_encontrado(Archivo): 
-    """Si el archivo no esta el programa"""
-    messagebox.showerror('ERROR ARCHIVO NO ENCONTRADO', f'PRESIONE ABRIR PARA MOVER EL ARCHIVO {Archivo} al diretorio C:\SistemaComedor')
-    source = askopenfilenames(title = 'Mover',filetypes=(file_tuples))
-    destination = 'C:\SistemaComedor'
-
-    for files in source:
-        try:
-            shutil.move(files, destination)
-        except shutil.Error:
-            pass
-    return False
-
-
-
-
-def VERIFICACION_ARCHIVO(Archivo):
-    """La siguiente función verifica la integridad y el formato de los datos que se encuentran en 
-    en el archivo Comedor.xlsx"""
-    datos = [] 
-    info = [] 
-    
-    try:
-        # verifica si el archivo esta en la carpeta y también el formato de los datos.
-        df = pd.read_excel(r'C:\SistemaComedor\Comedor.xlsx') 
-        for values in df.itertuples(index= False, name= None):
-            datos.append(values)
-
-        for cedula, nombre, seccion, grupo in datos:
-            if str(cedula).isalnum() == True:
-                info.append(nombre); info.append(seccion); info.append(grupo)
-                PersonasDelComedor[str(cedula).upper()] = tuple(info)
-                info.clear()
-
-            elif str(cedula).isnumeric():
-                info.append(nombre); info.append(seccion); info.append(grupo)
-                PersonasDelComedor[str(cedula)] = tuple(info)
-                info.clear()
-
-        datos.clear() 
-
-        for clave, valor0 in PersonasDelComedor.items():
-            # Verifica si el lugar donde están deberían estar los números de cédulas
-            # esta en el formato correcto.
-            if str(clave).isalpha() == True or str(valor0[0]).isalpha() == False:
-                PersonasDelComedor.clear()
-                break
-
-        if isnotEmpty(PersonasDelComedor) == True:
-            return True
-        
-    except FileNotFoundError:
-        Archivo_no_encontrado(Archivo)
-
-    except ValueError:
-        messagebox.showwarning('FORMATO INCORRECTO', 'EL ARCHIVO DEBE IR EN EL SIGUIENTE FORMATO\nCedula, Nombre, Sección, Grupo')
-        os.startfiles(r'C:\SistemaComedor\Comedor.xlsx')
-        return False
-
-
-
-
-
-
-
-
-def GuardarRegistro():
-    """Guarda el registro de las personas que utilizaron el comedor."""
-    global UsaronElComedor
-    
-    fecha = str(datetime.today().strftime('%m-%y')) # mes-año
-    hoy = pd.to_datetime(datetime.today().strftime('%d/%m/%y %H:%M:%S'), dayfirst= True) # dia-mes-año hora-minutos-segundos 
-
-    os.makedirs(r'C:\SistemaComedor\reportes', exist_ok=True) # crea el directorio donde se guardarán los reportes.
-
-    while True:
-        try:
-            archivo = load_workbook(r'C:\SistemaComedor\reportes\Reporte '+ fecha+'.xlsx')
-            ws = archivo.active # worksheet 
-            i = ws.max_row; i += 1 # busca la ultima celda sin datos.
-
-            for cedula, datos in UsaronElComedor.items():
-                # si la persona esta en la base de datos la guarda con sus datos los cuales son 
-                #| Numero de cédula | Nombre | Sección |  Grupo | Fecha
-                ws[f'A{i}'] = cedula # cedula 
-                ws[f'B{i}'] = datos[0] # Nombre
-                ws[f'C{i}'] = datos[1] # Seccion
-                ws[f'D{i}'] = datos[2] # Grupo
-                ws[f'E{i}'] = hoy # fecha
-                i += 1 # avanza una linea.
-
-            archivo.save(r'C:\SistemaComedor\reportes\Reporte '+ fecha+'.xlsx')
-            break
-
-        except FileNotFoundError:
-            # si no esta el archivo lo genera y le introduce los encabezados
-            wb = Workbook()
-            ws = wb.active
-            ws.title = 'Registro'
-            ws.append({1:'\tCEDULA', 2:'\tNOMBRE', 3: "\tSECCIÓN", 4:'\tGRUPO', 5:'\tFECHA'})
-            ws.column_dimensions['A'].width = 15
-            ws.column_dimensions['B'].width = 50
-            ws.column_dimensions['C'].width = 20
-            ws.column_dimensions['D'].width = 20
-            ws.column_dimensions['E'].width = 20
-            wb.save(fr'C:\SistemaComedor\reportes\Reporte '+fecha+'.xlsx')
-            continue
-
-        except PermissionError:
-            # Solo si el archivo de reportes esta abierto.
-            messagebox.showwarning('Reporte abierto',f"Por Favor cierre el archivo antes de continuar 'Reporte {fecha}.xlsx'")
-            continue
-
-        except ValueError:
-            # en
-            messagebox.showwarning('FORMATO INCORRECTO', 'EL ARCHIVO DEBE IR EN EL SIGUIENTE FORMATO\nCedula, Nombre, Sección, Grupo')
-            os.startfiles(r'C:\SistemaComedor\Comedor.xlsx')
-            return False
-
-
-
-
-
-
-def abrir_reportes():
-    """Abre un menu para seleccionar los reportes que se quieren abrir"""
-    source = askopenfilenames(initialdir= r'C:\SistemaComedor\Reportes', filetypes=(file_tuples)) # se toma el directorio donde se 
-    for files in source:
-        os.startfile(files)
-
-
-
-
 
 def centrar(ventana):
     """Centra cualquier ventana dependiendo el tamaño de la pantalla."""
@@ -231,10 +28,6 @@ def centrar(ventana):
     extraW = ventana.winfo_screenwidth()-w
     extraH = ventana.winfo_screenheight()-h
     ventana.geometry("%dx%d%+d%+d" % (w,h,extraW/2,extraH/2)) # posiciona la ventana
-
-
-
-
 
 def next(ventana):
     """Minimiza la ventana pasada"""
@@ -249,13 +42,7 @@ def back(cerrar, abrir):
     abrir.deiconify()
 
 
-def openfiles(pressed):
-    """Permite abrir la base de datos o directamente la carpeta de reportes."""
-    if pressed == 'abrirbase':
-        # abre el archivo donde estan todoso los estudiantes con Beneficio del comedor
-        os.startfile(r'C:\SistemaComedor\Comedor.xlsx')
-    else:
-        abrir_reportes()
+
 
 
 def Second_win(selection):
@@ -290,34 +77,34 @@ def Second_win(selection):
 
 
     def Enter(event):
+        ef.reportsdir('reports')
         """Registra cada una de las cédulas que se van introduciendo"""
         CedulasRegistradas.clear() # Evita que los datos se dupliquen en el registro
-        cargar_json()
+
         NumeroDeCedula = (entry.get()).upper() 
         try:
             if NumeroDeCedula.isalpha() == False and NumeroDeCedula.isalnum() == True:
                 if NumeroDeCedula not in CedulasRegistradas:
-                    if NumeroDeCedula in PersonasDelComedor:
+                    if NumeroDeCedula in ef.PersonasDelComedor:
                         # Si la persona está dentro del archivo.
-                        UsaronElComedor[NumeroDeCedula] = PersonasDelComedor[NumeroDeCedula]
-                        colorw = resource_path(r'Files\green.png')
+                        UsaronElComedor[NumeroDeCedula] = ef.PersonasDelComedor[NumeroDeCedula]
+                        colorw = resource_path(r'src\assets\img\green.png')
                         ventana(colorw)
                     else:
                         # Si la persona no esta dentro del archivo.
-                        colorw = resource_path(r'Files\gold.png')
+                        colorw = resource_path(r'src\assets\img\gold.png')
                         ventana(colorw)
 
                         UsaronElComedor[NumeroDeCedula] = ('Estudiante Regular', 'NA', 'Ventas')
                     CedulasRegistradas.append(NumeroDeCedula)
                 else:
                     # Si la cédula ya fue registrada.
-                    colorw = resource_path(r'Files\red.png')
+                    colorw = resource_path(r'src\assets\img\red.png')
                     ventana(colorw)
 
                 # Guarda el registro
-                editar_json(); GuardarRegistro()
+                ef.GuardarRegistro(UsaronElComedor)
                 UsaronElComedor.clear()# se resetea el diccionario
-
             elif NumeroDeCedula.isalpha() == True:
                 messagebox.showerror('Error', 'Tiene que estar en formato alfanúmerico.')
                 
@@ -325,17 +112,16 @@ def Second_win(selection):
                 messagebox.showerror('Error', 'No se permiten espacios y otros caracteres que no sean letras o números.')
 
             entry.delete(0, END)
-
-        except:
-            messagebox.showerror("Error", "Un error inesperado acaba de ocurrir :(")
-            entry.delete(0, END)
+        except Exception as e:
+            messagebox.showerror('Error', f'Ha ocurrido {e}')
 
 
 
 
 
 
-    if VERIFICACION_ARCHIVO('Comedor.xlsx') is True:
+
+    if ef.VerificacióndeArchivos('Comedor.xlsx') is True:
         global top
         next(root)
 
@@ -344,7 +130,7 @@ def Second_win(selection):
             top = Toplevel(root)
 
             # Fondo de la ventana secundaria.
-            img = resource_path(r'Files\INS.png')
+            img = resource_path(r'src\assets\img\INS.png')
             image = Image.open(img)
             tk_image = ImageTk.PhotoImage(image)
             Label(top, image = tk_image ).pack() # establece el fondo de la ventana
@@ -360,7 +146,7 @@ def Second_win(selection):
             top = Toplevel(root)
 
             # Fondo de la ventana secundaria.
-            img = resource_path(r'Files\archivos.png')
+            img = resource_path(r'src\assets\img\archivos.png')
             imagen = PhotoImage(file = img)
             Label(top, image= imagen, bd = 0).pack() # establece el fondo de la ventana
 
@@ -380,7 +166,7 @@ def Second_win(selection):
                             borderwidth= 0, 
                             relief='raised', 
                             overrelief='sunken',
-                            command=lambda: openfiles('revisar reportes')
+                            command=lambda: ef.openfiles('revisar reportes')
             )
 
             Bases.config(
@@ -394,7 +180,7 @@ def Second_win(selection):
                         borderwidth= 0, 
                         relief='raised', 
                         overrelief='sunken', 
-                        command=lambda: openfiles('abrirbase')
+                        command=lambda: ef.openfiles('abrirbase')
             )
 
             # Poscicionamientos de los botones
@@ -451,18 +237,18 @@ def Second_win(selection):
 # INTERFAZ GRÁFICA.
 def main():
 
-    global root, entry, Bases, BCedulas
+    global root, entry, Bases
 
 
     root = Tk()
     root.title('Comedor')
 
     #Icono
-    icon = resource_path(r'Files\icono.ico') 
+    icon = resource_path(r'src\assets\icon\icono.ico') 
     root.wm_iconbitmap(True, icon) # establece el icono de la ventana
 
     # Imagen de fondo.
-    img = resource_path(r'Files\main.png') 
+    img = resource_path(r'src\assets\img\main.png') 
     imagen = PhotoImage(file = img) 
     Label(root, image= imagen, bd = 0).pack() # establece el fondo de la ventana
 
@@ -511,11 +297,6 @@ def main():
             
     )
 
-
-
-
-
-
     # posicionamiento de los botonoes.
     Bases.place(x = 200, y = 270)
     Insertar.place(x = 627, y = 270)
@@ -529,5 +310,4 @@ def main():
     root.mainloop()
 
 if __name__ == "__main__":
-    os.makedirs(r'C:\SistemaComedor', exist_ok=True) # Crea la carpeta donde se guardarán los reportes
     main()
