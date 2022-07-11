@@ -1,3 +1,4 @@
 # trash
 Test/
 src/modules/__pycache__/
+.env/
