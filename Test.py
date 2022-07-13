@@ -1,6 +1,6 @@
 from tkinter import messagebox
-from src.modules.ExcelFiles import xlFiles
-from src.modules.Cache import Temp
+from src.modules import xlFiles, Temp, resource_path
+
 
 class App:
     Registradas = []
