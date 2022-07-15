@@ -63,23 +63,23 @@ class xlFiles:
         try:
             df = pd.read_excel(self.__filename)
             # Tomando los datos del archivo
-            for row in df.itertuples(name = None, index = True):
-                if 'nan' in str(row) or str(row[1]).isalpha() == True or str(row[1]).isalnum() == False or str(row[2]).isnumeric() == True or len(row):
-                    # Bug: Cuando hay celdas extras con datos extras en la fila el programa tira error en la fila incorrecta
+            
+            for row in df.itertuples(index = True):
+                # si hay menos datos en la fila de los cuales son requeridos el programa indicará la fila en la cual hay un error.
+                if 'nan' in str(row[0:5]) or str(row[1]).isalpha() == True or str(row[1]).isalnum() == False or str(row[2]).isnumeric() == True:
+                    # Bug: Cuando hay celdas extras con datos extras en otras filas el programa las ignora.
                     self.__fila = row[0] + 2
-                    messagebox.showerror('Error en fila', 
-                                         f'Revise la fila {self.__fila}\nEl formato del archivo debe ser\n | Cédula | Nombre completo | Sección | Grupo |')
+                    messagebox.showerror('Error en fila', f'Revise la fila {self.__fila}\nEl formato del archivo debe ser\n | Cédula | Nombre completo | Sección | Grupo |')
                     os.startfile(self.__filename)
                     break
                 else:
                     try:
-                        self.info[str(row[1].upper())] = row[2::]
+                        self.info[str(row[1].upper())] = row[2:5]
                     except AttributeError:
-                        self.info[str(row[1])] = row[2::]
+                        self.info[str(row[1])] = row[2:5] 
 
             if df.empty == True:
-                messagebox.showerror('Archivo vació', 
-                                      f'El archivo no puede estar vacio.\nEl formato del archivo debe ser\n | Cédula | Nombre completo | Sección | Grupo |')
+                messagebox.showerror('Archivo vacio', f'El archivo no puede estar vacio.\nEl formato del archivo debe ser\n\n| Cédula | Nombre completo | Sección | Grupo |')
                 os.startfile(self.__filename)
 
         except FileNotFoundError as e:
@@ -163,7 +163,7 @@ class Temp:
     - tempinfo: una lista con los números de cédula de las personas que utilizaron el comedor
     durante el día.
     """
-    tempinfo = []
+    tempinfo = [] # info dentro del archivo json.
     __hoy = time.strftime('%d-%m-%y')
     def Cargar_info(self, CacheFolder):
         """
@@ -189,7 +189,7 @@ class Temp:
 
 if __name__ == "__main__": 
     # Test
-    __xlF = xlFiles("\SistemaComedor") # Se especifica la carpeta en la cual se quiere trabajar
+    __xlF = xlFiles("SistemaComedor") # Se especifica la carpeta en la cual se quiere trabajar
     __xlF.VerificacionDeDatos('Comedor.xlsx') # se especifica el nombre del archivo con el cual se quiere trabajar
     __xlF.GuardarRegistro({305550820: ('Juan Daniel Luna Cienfuegos', '11-1', 'Regular')}) # Prueba de guardado de registro.
     print(__xlF.info) # datos recolectados
