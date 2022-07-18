@@ -1,7 +1,8 @@
 from tkinter import Button, Misc, Tk
 
 class Botones:
-    def __init__(self, master: Misc | None, text: str, width: int , x: int, y: int, fontTuple = ("Comic Sans MS", 20)) -> None:
+    def __init__(self, master: Misc | None, text: str, width: int , 
+                 x: int, y: int, command: '()', fontTuple = ("Comic Sans MS", 20)) -> None:
         self.Boton = Button(master)
         self.Boton.config(
             text= text,
@@ -14,6 +15,7 @@ class Botones:
             borderwidth= 0, 
             relief='raised', 
             overrelief='sunken',
+            command = command
         )
         
         self.Boton.place(x= x, y = y)
