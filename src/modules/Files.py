@@ -15,11 +15,11 @@ class xlFiles:
     """
 
     cache = '' # Carpeta de los registros diarios.
-    info = {}   
+    info = {}  
+    filename = '' # Base de datos
+    foldername = '' # Reportes
 
-
-
-    def __init__(self, dir: str) -> None:
+    def __init__(self, dir: str, Archivo: str) -> None:
         """
         Creación de la carpeta donde se alojarán los archivos de los estudiantes
         - dir: Carpeta con los archivos requeridos por el programa y proporcionados por este mismo.
@@ -28,28 +28,27 @@ class xlFiles:
         """
 
         self.__dir = dir
-        self.__foldername = self.__dir +"\\Reports"
+        self.filename = self.__dir + f"\\{Archivo}"
+        self.foldername = self.__dir +"\\Reports"
 
         if platform.system() == 'Windows':
-            self.cache = self.__foldername + '\\Cache'
+            self.cache = self.foldername + '\\Cache'
             os.makedirs(self.cache, exist_ok= True)
             os.system(f'attrib +h {self.cache}')
 
         elif platform.system() == 'Linux':
             # No ha sido probado.
-            self.cache = self.__foldername + '\\.Cache'
+            self.cache = self.foldername + '\\.Cache'
             os.makedirs(self.cache, exist_ok= True)
+            
 
 
-
-
-    def VerificacionDeDatos(self, Archivo: str) -> bool:
+    def VerificacionDeDatos(self) -> bool:
         """
         Verifica los datos del archivo los cuales deben estan en el siguente formato:
         
             | Cédula | Nombre completo | Sección | Grupo |
         
-        - Archivo: Nombre del archivo en el cual se encuentran todos los datos de las personas que poseen beneficio alguno del comedor.
         - info: diccionario con todos los datos de las personas que están en ese archivo.
 
         En el caso de que de que el archivo no este en la carpeta indicada este abrirá el administrador de archivos 
@@ -59,9 +58,8 @@ class xlFiles:
         hayan datos que no esten en el formato correcto. El programa mostrará una ventana de dialogo donde se mostrará la fila
         en la cual se encuentra el error, de igual forma si el archivo esta vacio mostrara otra ventana de dialogo indicando el error.
         """
-        self.__filename = self.__dir + f"\\{Archivo}"
         try:
-            df = pd.read_excel(self.__filename)
+            df = pd.read_excel(self.filename)
             # Tomando los datos del archivo
             
             for row in df.itertuples(index = True):
@@ -70,17 +68,18 @@ class xlFiles:
                     # Bug: Cuando hay celdas extras con datos extras en otras filas el programa las ignora.
                     self.__fila = row[0] + 2
                     messagebox.showerror('Error en fila', f'Revise la fila {self.__fila}\nEl formato del archivo debe ser\n | Cédula | Nombre completo | Sección | Grupo |')
-                    os.startfile(self.__filename)
+                    os.startfile(self.filename)
                     break
                 else:
                     try:
                         self.info[str(row[1].upper())] = row[2:5]
                     except AttributeError:
                         self.info[str(row[1])] = row[2:5] 
-
+                    return True
             if df.empty == True:
                 messagebox.showerror('Archivo vacio', f'El archivo no puede estar vacio.\nEl formato del archivo debe ser\n\n| Cédula | Nombre completo | Sección | Grupo |')
-                os.startfile(self.__filename)
+                os.startfile(self.filename)
+                return False
 
         except FileNotFoundError as e:
             messagebox.showerror('FileNotFoundError', f'{e}\nPor favor presione abrir para mover el archivo.')
@@ -94,6 +93,7 @@ class xlFiles:
 
         except Exception as e:
             messagebox.showerror('Error Inesperado', f'{e}')
+            return False
 
 
 
@@ -110,7 +110,7 @@ class xlFiles:
         __actual = datetime.today().strftime('%m-%y')
         while True:
             try:
-                archivo = load_workbook(self.__foldername +f"\\{__actual}.xlsx")
+                archivo = load_workbook(self.foldername +f"\\{__actual}.xlsx")
                 ws = archivo.active
                 i = ws.max_row; i += 1; # encuentra la última linea del archivo
                 for k, v in data.items():
@@ -127,7 +127,7 @@ class xlFiles:
                     ws[f'D{i}'] = v[2] # Grupo
                     ws[f'E{i}'] = __hoy # Fecha con hora
                     i += 1 # avanza a la siguiente linea.
-                archivo.save(self.__foldername + f'\\{__actual}.xlsx')
+                archivo.save(self.foldername + f'\\{__actual}.xlsx')
                 break
             except FileNotFoundError:
                 wb = Workbook()
@@ -143,14 +143,14 @@ class xlFiles:
                 ws.column_dimensions['C'].width = 20
                 ws.column_dimensions['D'].width = 20
                 ws.column_dimensions['E'].width = 20
-                wb.save(self.__foldername +f"\\{__actual}.xlsx")
+                wb.save(self.foldername +f"\\{__actual}.xlsx")
                 continue
             except PermissionError as e:
                 messagebox.askretrycancel(f'PermissionError', f'{e}\nPor favor cierre el archivo antes de continuar')
                 continue
             except ValueError:
                 messagebox.showwarning(f'Formato incorrecto', 'El archivo debe tener el siguiente formato\nCédula, Nombre completo, Sección, Grupo')
-                os.startfile(self.__filename)
+                os.startfile(self.filename)
                 continue      
 
 
