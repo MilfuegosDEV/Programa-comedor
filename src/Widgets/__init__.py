@@ -1,5 +1,8 @@
 
 from .Botones import Botones
 from .CentrarVentana import CentrarVentana
-__all__ = [Botones,
-           CentrarVentana]
+from .ArchivosMenú import RevisarArchivos
+
+__all__ = [Botones, 
+           CentrarVentana, 
+           RevisarArchivos]
