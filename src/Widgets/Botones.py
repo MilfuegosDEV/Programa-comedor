@@ -1,7 +1,8 @@
-from tkinter import Button, Misc, Tk
+from tkinter import Button, Tk
 
 class Botones:
-    def __init__(self, master: Misc | None, text: str, width: int , 
+    """Configuración y posicionamiento de los botones en la ventana.""" 
+    def __init__(self, master, text: str, width: int , 
                  x: int, y: int, command: '()', fontTuple = ("Comic Sans MS", 20)) -> None:
         self.Boton = Button(master)
         self.Boton.config(
