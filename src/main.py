@@ -1,7 +1,7 @@
 from tkinter import Label, PhotoImage, Tk
-from Widgets import Botones, CentrarVentana
+from Widgets import Botones, CentrarVentana, RevisarArchivos, IngresoMenú
 from modules import resource_path
-from Widgets import RevisarArchivos
+
 from modules.Files import xlFiles
 
 class App:
@@ -27,7 +27,7 @@ class App:
                 width = 15,
                 x = 627,
                 y = 270, 
-                command = lambda: print("HOla"))
+                command = lambda: self.validacion(IngresoMenú(self.root)))
         
         # Centra la ventana.
         CentrarVentana(self.root)
