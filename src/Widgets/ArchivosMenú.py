@@ -1,5 +1,5 @@
 
-from tkinter import Tk, Toplevel, Misc, PhotoImage, Label, filedialog
+from tkinter import Tk, Toplevel, PhotoImage, Label, filedialog
 from tkinter.messagebox import askyesno
 from . import  Botones, CentrarVentana
 from modules import resource_path
@@ -9,7 +9,7 @@ class RevisarArchivos:
     """
     Ventana del botón revisar archivos.
     """
-    def __init__(self, master: Misc | None, filename: str = '', foldername:str = str):
+    def __init__(self, master, filename: str = '', foldername:str = str):
         self.master = master
         self.master.withdraw()
         self.Archivos = Toplevel(master)
@@ -47,7 +47,7 @@ class RevisarArchivos:
         self.Archivos.mainloop() # para que no se destruya la imagen.
         
         
-    def atras(self, master: Misc, Toplevel: Misc):
+    def atras(self, master, Toplevel):
         
         master.deiconify()
         Toplevel.destroy()
