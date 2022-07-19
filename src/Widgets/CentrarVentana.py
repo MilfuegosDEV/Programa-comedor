@@ -1,12 +1,11 @@
-from tkinter import Misc, Tk
+
 class CentrarVentana:
+    """
+    Establece el tamaño de la ventana en la cual se esta trabajando y la posiciona en el centro
+    de la pantalla.
+    """
     __size = ('1066x600') # Tamaño de la ventana.
-        
-    def __init__(self, window: Misc | None):
-        """
-        Establece el tamaño de la ventana en la cual se esta trabajando y la posiciona en el centro
-        de la pantalla.
-        """
+    def __init__(self, window):
         window.geometry(self.__size) # Fija el tamaño de la ventana
         window.resizable(False, False) # indica que la ventana no se puede redimensionar
         window.update_idletasks() 
