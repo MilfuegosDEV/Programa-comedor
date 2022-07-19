@@ -172,9 +172,9 @@ class Temp:
         """
         try:
             with open(f'{CacheFolder}\\{self.__hoy}.json', 'r') as File:
-                self.tempfiles = json.load(File)
+                self.tempinfo = json.load(File)
         except FileNotFoundError:
-            self.Editar_info(CacheFolder, self.tempfiles)
+            self.Editar_info(CacheFolder, self.tempinfo)
 
     def Editar_info(self, CacheFolder: str, data: list):
         """
