@@ -30,18 +30,17 @@ class xlFiles:
         self.__dir = dir
         self.filename = self.__dir + f"\\{Archivo}"
         self.foldername = self.__dir +"\\Reports"
-
         if platform.system() == 'Windows':
             self.cache = self.foldername + '\\Cache'
             os.makedirs(self.cache, exist_ok= True)
             os.system(f'attrib +h {self.cache}')
-
         elif platform.system() == 'Linux':
             # No ha sido probado.
-            self.cache = self.foldername + '\\.Cache'
+            self.__dir = '/home' + "/" + dir
+            self.filename = self.__dir + f"/{Archivo}"
+            self.foldername = self.__dir +"/Reports"
+            self.cache = self.foldername + '/.Cache'
             os.makedirs(self.cache, exist_ok= True)
-            
-
 
     def VerificacionDeDatos(self) -> bool:
         """
