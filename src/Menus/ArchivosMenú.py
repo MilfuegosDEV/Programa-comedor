@@ -1,8 +1,8 @@
 
 from tkinter import Tk, Toplevel, PhotoImage, Label, filedialog
 from tkinter.messagebox import askyesno
-from . import  Botones, CentrarVentana
 from modules import resource_path
+from Widgets import Boton, CentrarVentanas
 import os
 
 class RevisarArchivos:
@@ -17,33 +17,32 @@ class RevisarArchivos:
         imagen = PhotoImage(file = resource_path(r'src\resources\images\ArchivosMenú.png'))
         Label(self.Archivos, image=imagen, bd=0).pack()
         # ----- Botones ----- #
-        # Todo implementar las funciones de los botones.
-        Botones(master = self.Archivos, 
+        Boton(master = self.Archivos, 
                 text = "Revisar\nreportes", 
                 width = 15, 
                 x = 200, 
                 y = 270, 
                 command= lambda: self.AbrirReportes(foldername))
         
-        Botones(master = self.Archivos, 
+        Boton(master = self.Archivos, 
                 text = 'Base\nde datos',
                 width = 15,
                 x = 627,
                 y = 270,
                 command= lambda: os.startfile(filename))
         # ----- Botones de navegacíon ------ #
-        Botones(master = self.Archivos, 
+        Boton(master = self.Archivos, 
                 text = 'Atrás', 
                 width = 20, 
                 x = 20, 
                 y = 570, 
                 command= lambda: self.atras(self.master, self.Archivos),
                 fontTuple = ('Comic Sans Ms', 9))
+
         # ----- Cerrando ventana ----- #
         self.Archivos.wm_protocol('WM_DELETE_WINDOW', (self.cerrar))
         # ----- Posicionando la ventana en la pantalla ----- #
-        CentrarVentana(self.Archivos)
-        
+        CentrarVentanas(self.Archivos)
         self.Archivos.mainloop() # para que no se destruya la imagen.
         
         
