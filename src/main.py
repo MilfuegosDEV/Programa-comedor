@@ -1,8 +1,7 @@
-from tkinter import Label, PhotoImage, Tk
-from Widgets import Botones, CentrarVentana, RevisarArchivos, IngresoMenú
-from modules import resource_path
-
-from modules.Files import xlFiles
+from tkinter import Label, PhotoImage, Tk, messagebox
+from Widgets import Boton, CentrarVentanas
+from modules import resource_path, xlFiles
+from Menus import RevisarArchivos, IngresoMenú
 
 class App:
     xlF = xlFiles(dir=r'\SistemaComedor', Archivo ='Comedor.xlsx')
@@ -15,31 +14,44 @@ class App:
         imagen = PhotoImage(file = resource_path(r'src\resources\images\MenúPrincipal.png'))
         Label(self.root, image=imagen, bd=0).pack()
         # ----- Botones ----- #
-        Botones(master = self.root, 
+        Boton(master = self.root, 
                 text = "Revisar\narchivos", 
                 width = 15,
                 x = 200, 
                 y = 270, 
-                command = lambda: self.validacion(RevisarArchivos(self.root, self.xlF.filename, self.xlF.foldername)))
+                command = lambda: self.validacion("RevisarArchivos"))
         
-        Botones(master = self.root, 
+        Boton(master = self.root, 
                 text = 'Ingresar\nCédulas.',
                 width = 15,
                 x = 627,
                 y = 270, 
-                command = lambda: self.validacion(IngresoMenú(self.root)))
-        
+                command = lambda: self.validacion(""))
+        # ----- Cerrando la ventana ----- #
+        self.root.protocol('WM_DELETE_WINDOW', self.cerrar)
         # Centra la ventana.
-        CentrarVentana(self.root)
+        CentrarVentanas(self.root)
         self.root.mainloop()
 
-    def validacion(self, action: object):
+    def cerrar(self):
+        question = messagebox.askyesno('¿Salir?', '¿Esta seguro/a que desea salir del programa?')
+        if question == True:
+            self.root.destroy()
+        else:
+            pass
+
+    def validacion(self, text):
         """
         Cuando alguien presiona un botón verifica la información.
         """
         if self.xlF.VerificacionDeDatos() == True:
-            action
+            if text == 'RevisarArchivos':
+                RevisarArchivos(self.root, self.xlF.filename, self.xlF.foldername)
+            else:
+                IngresoMenú(self.root, self.xlF.cache, self.xlF.info, self.xlF)
         else:
             pass
+    
+
 if __name__ == '__main__':
     app = App()
