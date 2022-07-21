@@ -1,5 +1,8 @@
 
-class CentrarVentana:
+from tkinter import Tk
+
+
+class CentrarVentanas:
     """
     Establece el tamaño de la ventana en la cual se esta trabajando y la posiciona en el centro
     de la pantalla.
@@ -18,5 +21,8 @@ class CentrarVentana:
 
         window.geometry("%dx%d%+d+%d" % (w, h, extraW/2, extraH/2)) # Posiciona la ventana.
 
-
+if __name__ == '__main__':
+    __app = Tk()
+    CentrarVentanas(__app)
+    __app.mainloop()
         

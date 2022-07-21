@@ -1,7 +1,8 @@
 from tkinter import Button, Tk
 
-class Botones:
-    """Configuración y posicionamiento de los botones en la ventana.""" 
+class Boton:
+    """
+    Configuración y posicionamiento de los botones en la ventana.""" 
     def __init__(self, master, text: str, width: int , 
                  x: int, y: int, command: '()', fontTuple = ("Comic Sans MS", 20)) -> None:
         self.Boton = Button(master)
@@ -20,9 +21,7 @@ class Botones:
         )
         
         self.Boton.place(x= x, y = y)
-        
-if __name__ == "__main__":
-    App = Tk()
-    boton1 = Botones(App, 'HOla', 15, 1, 23)
-    boton1.Boton.config(command=lambda: print('Hola'))
-    App.mainloop()
+if __name__ == '__main__':
+    __app = Tk()
+    Boton(__app, 'Hola', 7, 5, 4, lambda: print('Hola'), ('ARIAL', 8))
+    __app.mainloop()
