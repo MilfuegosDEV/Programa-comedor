@@ -68,17 +68,19 @@ class xlFiles:
                     self.__fila = row[0] + 2
                     messagebox.showerror('Error en fila', f'Revise la fila {self.__fila}\nEl formato del archivo debe ser\n | Cédula | Nombre completo | Sección | Grupo |')
                     os.startfile(self.filename)
-                    break
+                    return False
                 else:
                     try:
                         self.info[str(row[1].upper())] = row[2:5]
                     except AttributeError:
                         self.info[str(row[1])] = row[2:5] 
-                    return True
             if df.empty == True:
+                # En el caso de que el archivo este vacio
                 messagebox.showerror('Archivo vacio', f'El archivo no puede estar vacio.\nEl formato del archivo debe ser\n\n| Cédula | Nombre completo | Sección | Grupo |')
                 os.startfile(self.filename)
                 return False
+            # En el caso de que se realice todo con normalidad.
+            return True
 
         except FileNotFoundError as e:
             messagebox.showerror('FileNotFoundError', f'{e}\nPor favor presione abrir para mover el archivo.')
@@ -181,9 +183,16 @@ class Temp:
 
         - data: lista de números de cedulas.
         """
-        with open(f'{CacheFolder}\\{self.__hoy}.json', 'w') as File:
-            json.dump(data, File, indent=4)
-            File.close()
+        try:
+            with open(f'{CacheFolder}\\{self.__hoy}.json', 'w') as File:
+                json.dump(data, File, indent=4)
+                File.close()
+        except FileNotFoundError:
+            ask = messagebox.askokcancel('FileNotFoundError', 'Se supone que esto no debia suceder. Reinicie el programa, pero la información que fue recolectada durante el día ha sido perdida.')
+            if ask == True:
+                exit()
+            else:
+                pass
 
 
 if __name__ == "__main__": 
