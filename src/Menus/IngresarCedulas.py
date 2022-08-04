@@ -75,15 +75,15 @@ class IngresoMenú:
                     self.temp.Editar_info(self.cache, self.__hoy) # modifica el archivo json con la cédula que recién fue insertada.
                     self.xlF.GuardarRegistro(self.__ingresos); self.__ingresos.clear() # Guarda el registro y se borra la información para que no se dupliquen
                     self.entry.delete(0, END) # se borra lo que esta en el campo de texto.
-                    VentanaColores(self.RegistraCedulas, r'src\resources\images\PantallaPuedePasar.png')
+                    VentanaColores(self.RegistraCedulas, resource_path(r'src\resources\images\PantallaPuedePasar.png'))
                 else:
                     self.__ingresos[self.DNI] = ('NA', 'NA', 'Estudiante regular') # Si la cédula no esta en el archivo.
                     self.temp.Editar_info(self.cache, self.__hoy)
                     self.xlF.GuardarRegistro(self.__ingresos); self.__ingresos.clear()
                     self.entry.delete(0, END)
-                    VentanaColores(self.RegistraCedulas, r'src\resources\images\PantallaTiquete.png')
+                    VentanaColores(self.RegistraCedulas, resource_path(r'src\resources\images\PantallaTiquete.png'))
 
             else:
                 self.entry.delete(0, END)
-                VentanaColores(self.RegistraCedulas, r'src\resources\images\PantallaYaComió.png')
+                VentanaColores(self.RegistraCedulas, resource_path(r'src\resources\images\PantallaYaComió.png'))
 
