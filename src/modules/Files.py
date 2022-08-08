@@ -117,7 +117,7 @@ class xlFiles:
                 for k, v in data.items():
                     """
                     Cédula         | Nombre completo              | Sección | Grupo                 | Fecha
-                    305550820        Juan Daniel Luna Cienfuegos      11-1    Estudiante Regular      1-7-2022    
+                    1111111111       Roberto Robles Gomez           11-1    Estudiante Regular       1-7-2022    
                     """
                     try:
                         ws[f'A{i}'] = int(k) # Número de cédula
@@ -199,5 +199,5 @@ if __name__ == "__main__":
     # Test
     __xlF = xlFiles("SistemaComedor") # Se especifica la carpeta en la cual se quiere trabajar
     __xlF.VerificacionDeDatos('Comedor.xlsx') # se especifica el nombre del archivo con el cual se quiere trabajar
-    __xlF.GuardarRegistro({305550820: ('Juan Daniel Luna Cienfuegos', '11-1', 'Regular')}) # Prueba de guardado de registro.
+    __xlF.GuardarRegistro({11111111: ('Roberto Robles Gomez', '11-1', 'Regular')}) # Prueba de guardado de registro.
     print(__xlF.info) # datos recolectados
