@@ -38,7 +38,7 @@ Después de crear el entorno virtual debes activarlo:
 
 Instala los requerimientos del programa:
 
-    pip -r install requirements.txt
+    pip install -r requirements.txt
 
 **Finalmente ve al directorio [src](src/) y ejecuta [main](main.py).**
 
