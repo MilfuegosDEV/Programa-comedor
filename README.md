@@ -17,16 +17,18 @@ El objetivo de este manual de usuario es ayudarte con los posibles errores y pro
 
 #### Clonando repositorio 📦:
 
-> Verifica de tener [Python](https://www.python.org/downloads/release/python-3106/)
-instalado en tu equipo.
+> Verifica de tener [Python](https://www.python.org/downloads/release/python-3106/) y [Git](https://git-scm.com/download/win)
+instalados en tu equipo
 
 Clona el repositorio con el siguiente comando en cmd o en PowerShell.
 
     git clone https://github.com/MilfuegosxD/Programa-comedor
 
-El siguiente paso es **crear un entorno virtual** con el siguiente comando en **cmd** o en **PowerShell**
+El siguiente paso es crear un [entorno virtual](https://docs.python.org/es/3/glossary.html#term-virtual-environment) con el siguiente comando en **cmd** o en **PowerShell**
 
     python -m venv .env
+
+> [¿Cómo crear un entorno virtual?](https://www.freecodecamp.org/espanol/news/entornos-virtuales-de-python-explicados-con-ejemplos/)
 
 Después de crear el entorno virtual debes activarlo:
 
@@ -77,4 +79,4 @@ Asegurese de que el archivo ***Comedor.xlsx*** este en el siguiente formato:
 ![Formato_del_archivo](src/resources/assets/FormatoDelArchivo.png)
 
 
-Una vez hayas hecho esto, puedes presionar cualquiera de los dos botones
+Una vez hayas hecho esto, puedes usar el programa.
