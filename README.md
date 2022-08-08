@@ -74,8 +74,7 @@ Lo siguiente a hacer es seleccionar el archivo que vas a mover y cuando lo encue
 
 Asegurese de que el archivo ***Comedor.xlsx*** este en el siguiente formato:
 
-<center>
-    <img src = "src/resources/assets/FormatoDelArchivo.png">
-</center>
+![Formato_del_archivo](src/resources/assets/FormatoDelArchivo.png)
+
 
 Una vez hayas hecho esto, puedes presionar cualquiera de los dos botones
