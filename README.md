@@ -42,7 +42,7 @@ Instala los requerimientos del programa:
 
 **Finalmente ve al directorio [src](src/) y ejecuta [main](main.py).**
 
-#### Descargando el ejecutable:
+#### Descargando el ejecutable 💻:
 
 Para decargar ingresar el enlace toca la imagen.
 
