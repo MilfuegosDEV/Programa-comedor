@@ -6,19 +6,25 @@ cantidad de personas que llegan a utilizar este servicio durante un periodo de t
 la espera en filas.
 
 
-
 ## Manual de usuario
 
-El objetivo de este manual de usuario es ayudarte con los posibles errores y problemas que te pueden ocurrir durante el tiempo en el cual utilizas el programa.
+El objetivo de este manual es ayudarte con los posibles errores y problemas que te pueden ocurrir durante el tiempo en el cual utilizas el programa.
 
 
 
-### Instalación:
+### Métodos de instalación:
+
+#### Descargando el ejecutable ☕:
+
+Toca la imagen para descargar. ***ProgramaComedor.exe***.
+
+[![Download](assets/download.png)](https://github.com/MilfuegosxD/Programa-comedor/releases/download/v2.0.3/ProgramaComedor2-0-3.zip)
+
+> En el caso de que tengas problemas con el antivirus, por favor lee esta información de: [https://answers.microsoft.com/](https://answers.microsoft.com/es-es/protect/forum/all/virus-en-pyinstaller/7a07bd9c-6c7d-4957-b3b6-e7b55d1a0880) y sigue los pasos.
 
 #### Clonando repositorio 📦:
 
-> Verifica de tener [Python](https://www.python.org/downloads/release/python-3106/) y [Git](https://git-scm.com/download/win)
-instalados en tu equipo
+> Verifica de tener [Python](https://www.python.org/downloads/release/python-3106/) y [Git](https://git-scm.com/download/win) instalados en tu equipo
 
 Clona el repositorio con el siguiente comando en cmd o en PowerShell.
 
@@ -38,21 +44,9 @@ Después de crear el entorno virtual debes activarlo:
 
 Instala los requerimientos del programa:
 
-    pip -r install requirements.txt
+    pip install -r requirements.txt
 
 **Finalmente ve al directorio [src](src/) y ejecuta [main](main.py).**
-
-#### Descargando el ejecutable 💻:
-
-Para decargar ingresar el enlace toca la imagen.
-
-[![MediaFire](/src/resources/assets/Mediafire.png)](https://www.mediafire.com/file/kqqv1epxgfjru1h/ProgramaComedor.exe/file)
-
-[![Mega](src/resources/assets/Mega.png)](https://mega.nz/file/3SQ1mKBS#uEHQBhrgm-nvXe9LPe05HqW5WFutDPsoH1TjDdpUKjY)
-
-Una vez se haya instalado ejecuta el archivo.
-
-> En el caso de que tengas problemas con el antivirus, debes desactivar el antivirus ya que el antivirus da un falso positivo, más información en: [https://answers.microsoft.com/](https://answers.microsoft.com/es-es/protect/forum/all/virus-en-pyinstaller/7a07bd9c-6c7d-4957-b3b6-e7b55d1a0880)
 
 
 ### Primera ejecución
@@ -62,21 +56,21 @@ directorio en la [raíz](https://es.wikipedia.org/wiki/Directorio_ra%C3%ADz) del
 este se encontrarán todos los archivos necesarios para el funcionamiento del programa y los archivos
 generados por el sistema, luego te mostrará una ventana, la cual es el menú principal.
 
-![MenúPrincipal.png](src/resources/assets/main.png)
+![MenúPrincipal.png](assets/main.png)
 
 El siguiente paso es presionar uno de los 2 botones y una vez hayas presionado algún botón te mostrará un mensaje.
 
-![FileNotFoundError](src/resources/assets/FileNotFoundError.png) 
+![FileNotFoundError](assets/FileNotFoundError.png) 
 
 > Este mensaje nos indica que el archivo ***Comedor.xlsx*** no se encuentra en la carpeta, por lo tanto tendremos que mover el archivo, para eso te aparecerá la siguiente ventana.
 
-![FileDialog](src/resources/assets/FileDialog.png)
+![FileDialog](assets/FileDialog.png)
 
-Lo siguiente a hacer es seleccionar el archivo que vas a mover y cuando lo encuentres, debes seleccionar el archivo y presionar el botón de abrir, el cual moverá el archivo al directorio de ***SistemaComedor***. 
+Lo siguiente a hacer es seleccionar el archivo que vas a mover y cuando lo encuentres, debes presionar el botón de abrir, el cual moverá el archivo al directorio de ***SistemaComedor***. 
 
 Asegurese de que el archivo ***Comedor.xlsx*** este en el siguiente formato:
 
-![Formato_del_archivo](src/resources/assets/FormatoDelArchivo.png)
+![Formato_del_archivo](assets/FormatoDelArchivo.png)
 
 
 Una vez hayas hecho esto, puedes usar el programa.
