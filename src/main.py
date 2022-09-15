@@ -4,15 +4,20 @@ from modules import resource_path, xlFiles
 from Menus import RevisarArchivos, IngresoMenú
 
 class App:
-    xlF = xlFiles(dir=r'\SistemaComedor', Archivo ='Comedor.xlsx')
+    
     def __init__(self) -> None:
+        self.xlF = xlFiles(dir=r'\SistemaComedor', Archivo ='Comedor.xlsx')
+
         self.root = Tk()
         self.root.title('Comedor') 
+        
         # ----- Icono ----- #
         self.root.wm_iconbitmap(True, resource_path(r'src\resources\icon\icono.ico')) # icono de la app
+        
         # ----- Background  ----- #
         imagen = PhotoImage(file = resource_path(r'src\resources\images\MenúPrincipal.png'))
         Label(self.root, image=imagen, bd=0).pack()
+        
         # ----- Botones ----- #
         Boton(master = self.root, 
                 text = "Revisar\narchivos", 
@@ -22,13 +27,15 @@ class App:
                 command = lambda: self.validacion("RevisarArchivos"))
         
         Boton(master = self.root, 
-                text = 'Ingresar\nCédulas.',
+                text = 'Ingresar\nCédulas',
                 width = 15,
                 x = 627,
                 y = 270, 
                 command = lambda: self.validacion(""))
+        
         # ----- Cerrando la ventana ----- #
         self.root.protocol('WM_DELETE_WINDOW', self.cerrar)
+        
         # Centra la ventana.
         CentrarVentanas(self.root)
         self.root.mainloop()
@@ -41,9 +48,11 @@ class App:
             pass
 
     def validacion(self, text):
+        
         """
         Cuando alguien presiona un botón verifica la información.
         """
+        
         if self.xlF.VerificacionDeDatos() == True:
             if text == 'RevisarArchivos':
                 RevisarArchivos(self.root, self.xlF.filename, self.xlF.foldername)
@@ -51,7 +60,7 @@ class App:
                 IngresoMenú(self.root, self.xlF.cache, self.xlF.info, self.xlF)
         else:
             pass
-    
+
 
 if __name__ == '__main__':
-    app = App()
+    app = App()    
