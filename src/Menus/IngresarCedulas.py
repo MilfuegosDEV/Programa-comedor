@@ -3,11 +3,14 @@ from modules import resource_path, Temp
 from Widgets import CentrarVentanas, Boton
 from Menus import VentanaColores
 from datetime import datetime
+
 class IngresoMenú:
     temp = Temp()
     __hoy = []
     __ingresos = {}
     def __init__(self, master, cache, info, xlF):
+
+
         self.master = master
         self.cache = cache
         self.info = info
@@ -55,6 +58,7 @@ class IngresoMenú:
         """
         Cuando alguien presiona enter se verifica que una personas este dentro del archivo
         excel que fue proporcionado anteriormente."""
+        
         try:
             self.DNI = ((self.entry.get()).strip).upper()
         except:
@@ -76,6 +80,7 @@ class IngresoMenú:
                         self.temp.Editar_info(self.cache, self.__hoy) # modifica el archivo json con la cédula que recién fue insertada.
                         self.xlF.actual = datetime.today().strftime('%m-%y')
                         self.xlF.GuardarRegistro(self.__ingresos) # Guarda el registro y se borra la información para que no se dupliquen
+                        
                         self.xlF.actual = datetime.today().strftime('%d-%m-%y')
                         self.xlF.GuardarRegistro(self.__ingresos); self.__ingresos.clear() # Guarda el registro y se borra la información para que no se dupliquen
                         self.entry.delete(0, END) # se borra lo que esta en el campo de texto.
