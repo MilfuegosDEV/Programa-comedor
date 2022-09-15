@@ -78,10 +78,10 @@ class IngresoMenú:
                     if self.DNI in self.info.keys():
                         self.__ingresos[self.DNI] = self.info[self.DNI] # Si la cédula estaba en el archivo excel 
                         self.temp.Editar_info(self.cache, self.__hoy) # modifica el archivo json con la cédula que recién fue insertada.
-                        self.xlF.actual = datetime.today().strftime('%m-%y')
+                        self.xlF.actual = "Reporte del mes"
                         self.xlF.GuardarRegistro(self.__ingresos) # Guarda el registro y se borra la información para que no se dupliquen
                         
-                        self.xlF.actual = datetime.today().strftime('%d-%m-%y')
+                        self.xlF.actual = f"Día {datetime.today().strftime('%d')}"
                         self.xlF.GuardarRegistro(self.__ingresos); self.__ingresos.clear() # Guarda el registro y se borra la información para que no se dupliquen
                         self.entry.delete(0, END) # se borra lo que esta en el campo de texto.
                         VentanaColores(self.RegistraCedulas, resource_path(r'src\resources\images\PantallaPuedePasar.png'))

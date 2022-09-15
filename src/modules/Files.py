@@ -22,7 +22,7 @@ class xlFiles:
         self.foldername = ''
         """Carpeta de reportes"""
         
-        self.actual = datetime.today().strftime('%m-%y')
+        self.actual = "Test"
 
         self.__crearCarpetas(dir, Archivo)
 
@@ -38,11 +38,38 @@ class xlFiles:
         
         self.__dir = dir
         self.filename = self.__dir + f"\\{Archivo}"
-        self.foldername = self.__dir + f"\\Reportes\\{datetime.today().strftime('%Y')}\\{datetime.today().strftime('%m-%Y')}"
-        
+        self.foldername = self.__dir + f"\\Reportes\\{datetime.today().strftime('%Y')}"
+
+        # Se se indica el nombre del mes.
+        if datetime.today().strftime("%m") == '01':
+            self.foldername = self.foldername + "\\Enero"
+        elif datetime.today().strftime("%m") == '02':
+            self.foldername = self.foldername + "\\Febrero"
+        elif datetime.today().strftime("%m") == '03':
+            self.foldername = self.foldername + "\\Marzo"
+        elif datetime.today().strftime("%m") == '04':
+            self.foldername = self.foldername + "\\Abril"
+        elif datetime.today().strftime("%m") == '05':
+            self.foldername = self.foldername + "\\Mayo"
+        elif datetime.today().strftime("%m") == '06':
+            self.foldername = self.foldername + "\\Junio"
+        elif datetime.today().strftime("%m") == '07':
+            self.foldername = self.foldername + "\\Julio"
+        elif datetime.today().strftime("%m") == '08':
+            self.foldername = self.foldername + "\\Agosto"
+        elif datetime.today().strftime("%m") == '09':
+            self.foldername = self.foldername + "\\Setiembre"
+        elif datetime.today().strftime("%m") == '10':
+            self.foldername = self.foldername + "\\Octubre"
+        elif datetime.today().strftime("%m") == '11':
+            self.foldername = self.foldername + "\\Noviembre"
+        elif datetime.today().strftime("%m") == '12':
+            self.foldername = self.foldername + "\\Diciembre"
+
         try:
             self.cache = self.foldername + '\\Cache'
             self.foldername 
+            # se crea la carpeta.
             os.makedirs(self.cache, exist_ok= True)
             os.system(f'attrib +h {self.cache}')
         except:
