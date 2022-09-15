@@ -1,55 +1,58 @@
-# - @author: Juan Daniel Luna Cienfuegos
-# - @Github: MilfuegosxDD
-# - @version: 3.1.4
-
 from datetime import datetime
-import os, pandas as pd, shutil, platform, json, time
+import os, pandas as pd, shutil, json, time
 from openpyxl import Workbook, load_workbook
 from tkinter import messagebox, filedialog as fd
 
 class xlFiles:
 
-    """
-    Verificación del archivo xlsx del cuál se alojan los datos del estudiante y generación
-    del reporte mensual de los estudiantes que asistieron al comedor
-    """
-    
-    cache = '' # Carpeta de los registros diarios.
-    info = {}  
-    filename = '' # Base de datos
-    foldername = '' # Reportes
-    actual = datetime.today().strftime('%m-%y')
-    
     def __init__(self, dir: str, Archivo: str) -> None:
         """
-        Creación de la carpeta donde se alojarán los archivos de los estudiantes
-        - dir: Carpeta con los archivos requeridos por el programa y proporcionados por este mismo.
-        - cache: Carpeta de los registros diarios.
-        AMBAS CARPETAS EN EL CASO DE EXISTIR NO SE MODIFICAN.
+        Verificación del archivo xlsx del cuál se alojan los datos del estudiante y generación
+        del reporte mensual de los estudiantes que asistieron al comedor
         """
+        
+        self.__Archivo = Archivo
+        """Nombre del archivo"""
+        self.cache = '' 
+        """Carpeta con las cédulas registradas durante el día."""
+        self.info = {}  
 
+        self.filename = ''
+        """Base de datos"""
+        self.foldername = ''
+        """Carpeta de reportes"""
+        
+        self.actual = datetime.today().strftime('%m-%y')
+
+        self.__crearCarpetas(dir, Archivo)
+
+    def __crearCarpetas (self, dir: str, Archivo: str):
+        """Creación de la carpeta donde se alojarán los archivos de los estudiantes
+    
+        AMBAS CARPETAS EN EL CASO DE EXISTIR NO SE MODIFICAN.
+
+        Args:
+            dir (str): Carpeta con los archivos requeridos por el programa y proporcionados por este mismo.
+            Archivo (str): Carpeta de los registros diarios.
+        """
+        
         self.__dir = dir
         self.filename = self.__dir + f"\\{Archivo}"
-        self.foldername = self.__dir +"\\Reports"
-        if platform.system() == 'Windows':
+        self.foldername = self.__dir + f"\\Reportes\\{datetime.today().strftime('%Y')}\\{datetime.today().strftime('%m-%Y')}"
+        
+        try:
             self.cache = self.foldername + '\\Cache'
+            self.foldername 
             os.makedirs(self.cache, exist_ok= True)
             os.system(f'attrib +h {self.cache}')
-        elif platform.system() == 'Linux':
-            # No ha sido probado.
-            self.__dir = '/home' + "/" + dir
-            self.filename = self.__dir + f"/{Archivo}"
-            self.foldername = self.__dir +"/Reports"
-            self.cache = self.foldername + '/.Cache'
-            os.makedirs(self.cache, exist_ok= True)
+        except:
+            exit()
+
 
     def VerificacionDeDatos(self) -> bool:
-        """
-        Verifica los datos del archivo los cuales deben estan en el siguente formato:
+        """Verifica los datos del archivo los cuales deben estan en el siguente formato:
         
-            | Cédula | Nombre completo  
-
-        - info: diccionario con todos los datos de las personas que están en ese archivo.
+            | Cédula | Nombre completo | Sección
 
         En el caso de que de que el archivo no este en la carpeta indicada este abrirá el administrador de archivos 
         para que podamos movamos el archivo a la carpeta solicitada.
@@ -57,58 +60,88 @@ class xlFiles:
         En el caso de que haya una fila con menos datos de los solicitados el programa o que en esta fila
         hayan datos que no esten en el formato correcto. El programa mostrará una ventana de dialogo donde se mostrará la fila
         en la cual se encuentra el error, de igual forma si el archivo esta vacio mostrara otra ventana de dialogo indicando el error.
+
+        Returns:
+            bool: Retornará True en el caso de que toda la información del archivo sea correcta, de lo contrario false.
         """
+
         try:
             df = pd.read_excel(self.filename)
             # Tomando los datos del archivo
             
             for row in df.itertuples(index = True):
                 # si hay menos datos en la fila de los cuales son requeridos el programa indicará la fila en la cual hay un error.
+                
                 if 'nan' in str(row[0:3]) or ((str(row[1]).strip()).isalpha() == True or (str(row[1]).strip()).isalnum() == False) or str(row[2]).isnumeric() == True:
+                    # Requisitos:
+
+                    # No pueden haber celdas vacías en la cedula o nombre.
+                    # La cédula no pueden ser solamente letras, debe ser una combinación entre letras y números o solamente o números.
+                    # El número de cédula no puede contener espacios o algún carácter especial.
+                    # El nombre no puede contener ningun número.
+
                     # Bug: Cuando hay celdas extras con datos extras en otras filas el programa las ignora.
                     self.__fila = row[0] + 2
-                    messagebox.showerror('Error en fila', f'Revise la fila {self.__fila}\nEl archivo debe tener el siguiente formato\nCédula, Nombre completo')
+                    messagebox.showerror('Error en fila', f'Revise la fila {self.__fila}\nEl archivo debe tener el siguiente formato\nCédula, Nombre completo y sección.')
                     os.startfile(self.filename)
                     return False
+                
                 else:
                     try:
                         self.info[str(row[1].upper()).strip()] = row[2:4]
                     except AttributeError:
                         self.info[str(row[1]).strip()] = row[2:4] 
+            
             if df.empty == True:
                 # En el caso de que el archivo este vacio
-                messagebox.showerror('Archivo vacio', f'El archivo no puede estar vacio.\nEl archivo debe tener el siguiente formato\nCédula, Nombre completo')
+                messagebox.showerror('Archivo vacio', f'El archivo no puede estar vacio.\nEl archivo debe tener el siguiente formato\nCédula, Nombre completo y sección.')
                 os.startfile(self.filename)
                 return False
+            
             # En el caso de que se realice todo con normalidad.
             return True
 
-        except FileNotFoundError as e:
-            messagebox.showerror('FileNotFoundError', f'{e}\nPor favor presione abrir para mover el archivo.')
+        except FileNotFoundError:
+            # En el caso de que no se encuentre el archivo
+            messagebox.showerror('FileNotFoundError', f'No se ha encontrado el archivo {self.__Archivo}\nPor favor presione abrir para copiar el archivo.')
             source = fd.askopenfilename(title = 'Mover',filetypes=(('Excel files', '.xlsx'), ('All', '.')))
+            
+            __nombre = (source).split("/")
+            __nombre = (__nombre[-1])
+            __nombre = __nombre.split('.')
+            __nombre = __nombre[0]
+
+            __archivo = self.__Archivo.split('.')
+        
+
             destination = self.__dir
-            try:
-                shutil.move(source, destination)
-            except shutil.Error:
-                pass
+
+            if __nombre.title() == __archivo[0].title():
+                try:
+                    shutil.copy(source, destination)
+                except shutil.Error:
+                    pass
+                return False
+            else:
+                messagebox.showwarning("Nombre incorrecto", f"El archivo debe tener el nombre de: {self.__Archivo}")
+                return False
+                
+
+        except:
+            messagebox.showerror('Error Inesperado', 'Ha ocurrido un error inesperado.')
             return False
-
-        except Exception as e:
-            messagebox.showerror('Error Inesperado', f'{e}')
-            return False
-
-
 
 
     def GuardarRegistro(self, data: dict):
-        """
-        Crea y guarda a las personas que han ingresado al comedor durante un mes.
-        
-        - data: Los datos de las personas que han usado el comedor durante el dia.
+        """Guarda el registro de los ingresos de los becados al comedor.
 
-        En el caso de que no este el archivo del mes, este lo crea y finalmente ingresa los datos.
+        Args:
+            data (dict): {Número cédula: [Nombre completo, sección]}
         """
+
+
         __hoy = pd.to_datetime(datetime.today().strftime('%d-%m-%y %H:%M:%S'), dayfirst=True)
+
         while True:
             try:
                 archivo = load_workbook(self.foldername +f"\\{self.actual}.xlsx")
@@ -116,21 +149,29 @@ class xlFiles:
                 i = ws.max_row; i += 1; # encuentra la última linea del archivo
                 for k, v in data.items():
                     """
-                    Cédula         | Nombre completo              
-                    1111111111       Roberto Robles Gomez             
+                    Cédula         | Nombre completo       | Sección
+                    1111111111       Roberto Robles Gomez       8-2
                     """
+                    __cedula = k
+                    __nombreCompleto = v[0]
+                    __seccion = v[1]
+
                     try:
-                        ws[f'A{i}'] = int(k) # Número de cédula
+                        ws[f'A{i}'] = int(__cedula) # Número de cédula
                     except ValueError:
-                        ws[f'A{i}'] = k # Número de cédula
+                        ws[f'A{i}'] = __cedula # Número de cédula
                     finally:
-                        ws[f'B{i}'] = v[0] # Nombre completo
-                        ws[f'C{i}'] = v[1] # Sección 
+                        ws[f'B{i}'] = __nombreCompleto # Nombre completo
+                        ws[f'C{i}'] = __seccion # Sección 
+                        
                         ws[f'D{i}'] = __hoy # Fecha con hora
                         i += 1 # avanza a la siguiente linea.
+                
                 archivo.save(self.foldername + f'\\{self.actual}.xlsx')
                 break
+
             except FileNotFoundError:
+
                 wb = Workbook()
                 ws = wb.active
                 ws.title = 'Registro'
@@ -145,16 +186,15 @@ class xlFiles:
 
                 wb.save(self.foldername +f"\\{self.actual}.xlsx")
                 continue
+
             except PermissionError as e:
                 messagebox.askretrycancel(f'PermissionError', f'{e}\nPor favor cierre el archivo antes de continuar')
                 continue
+
             except ValueError:
-                messagebox.showwarning(f'Formato incorrecto', 'El archivo debe tener el siguiente formato\nCédula, Nombre completo')
+                messagebox.showwarning(f'Formato incorrecto', 'El archivo debe tener el siguiente formato\nCédula, Nombre completo y sección.')
                 os.startfile(self.filename)
                 continue      
-
-
-
 
 
 class Temp:
@@ -196,7 +236,7 @@ class Temp:
 
 if __name__ == "__main__": 
     # Test
-    __xlF = xlFiles("SistemaComedor") # Se especifica la carpeta en la cual se quiere trabajar
-    __xlF.VerificacionDeDatos('Comedor.xlsx') # se especifica el nombre del archivo con el cual se quiere trabajar
-    __xlF.GuardarRegistro({11111111: ('Roberto Robles Gomez', '11-1', 'Regular')}) # Prueba de guardado de registro.
+    __xlF = xlFiles("SistemaComedor", "Comedor.xlsx") # Se especifica la carpeta en la cual se quiere trabajar
+    __xlF.VerificacionDeDatos() # se especifica el nombre del archivo con el cual se quiere trabajar
+    __xlF.GuardarRegistro({11111111: ('Roberto Robles Gomez', '11-1')}) # Prueba de guardado de registro.
     print(__xlF.info) # datos recolectados
