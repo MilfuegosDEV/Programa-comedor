@@ -174,6 +174,7 @@ class xlFiles:
                 archivo = load_workbook(self.foldername +f"\\{self.actual}.xlsx")
                 ws = archivo.active
                 i = ws.max_row; i += 1; # encuentra la última linea del archivo
+                ws.protection.disable()
                 for k, v in data.items():
                     """
                     Cédula         | Nombre completo       | Sección
@@ -193,7 +194,7 @@ class xlFiles:
                         
                         ws[f'D{i}'] = __hoy # Fecha con hora
                         i += 1 # avanza a la siguiente linea.
-                
+                ws.protection.enable()
                 archivo.save(self.foldername + f'\\{self.actual}.xlsx')
                 break
 
@@ -201,6 +202,7 @@ class xlFiles:
 
                 wb = Workbook()
                 ws = wb.active
+                ws.protection.password = 'CTPCOMEDOR01'
                 ws.title = 'Registro'
                 ws.append({1:'Cédula',
                            2:'Nombre completo',
