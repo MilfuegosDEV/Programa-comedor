@@ -202,7 +202,7 @@ class xlFiles:
 
                 wb = Workbook()
                 ws = wb.active
-                ws.protection.password = 'CTPCOMEDOR01'
+                ws.protection.password = 'MySecretKey' # Contraseña de los reportes.
                 ws.title = 'Registro'
                 ws.append({1:'Cédula',
                            2:'Nombre completo',
