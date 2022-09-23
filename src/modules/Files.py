@@ -1,5 +1,5 @@
 from datetime import datetime
-import os, pandas as pd, shutil, json, time
+import os, pandas as pd, shutil, json
 from openpyxl import Workbook, load_workbook
 from tkinter import messagebox, filedialog as fd
 
@@ -106,8 +106,8 @@ class xlFiles:
                     # La cédula no pueden ser solamente letras, debe ser una combinación entre letras y números o solamente o números.
                     # El número de cédula no puede contener espacios o algún carácter especial.
                     # El nombre no puede contener ningun número.
+                    # No pueden haber filas vacias entre filas.
 
-                    # Bug: Cuando hay celdas extras con datos extras en otras filas el programa las ignora.
                     self.__fila = row[0] + 2
                     messagebox.showerror('Error en fila', f'Revise la fila {self.__fila}\nEl archivo debe tener el siguiente formato\nCédula, Nombre completo y sección.')
                     os.startfile(self.filename)
@@ -118,6 +118,7 @@ class xlFiles:
                         self.info[str(row[1].upper()).strip()] = row[2:4]
                     except AttributeError:
                         self.info[str(row[1]).strip()] = row[2:4] 
+
             
             if df.empty == True:
                 # En el caso de que el archivo este vacio
@@ -130,7 +131,7 @@ class xlFiles:
 
         except FileNotFoundError:
             # En el caso de que no se encuentre el archivo
-            messagebox.showerror('FileNotFoundError', f'No se ha encontrado el archivo {self.__Archivo}\nPor favor presione abrir para copiar el archivo.')
+            messagebox.showerror('Base de datos no encontrada', f'No se ha encontrado el archivo {self.__Archivo}\nPor favor presione abrir para copiar el archivo.')
             source = fd.askopenfilename(title = 'Mover',filetypes=(('Excel files', '.xlsx'), ('All', '.')))
             
             __nombre = (source).split("/")
@@ -150,7 +151,7 @@ class xlFiles:
                     pass
                 return False
             else:
-                messagebox.showwarning("Nombre incorrecto", f"El archivo debe tener el nombre de: {self.__Archivo}")
+                messagebox.showinfo("Nombre incorrecto o formato incorrrecto", f"La base de datos debe tener el nombre {self.__Archivo}")
                 return False
                 
 
@@ -233,7 +234,7 @@ class Temp:
     durante el día.
     """
     tempinfo = [] # info dentro del archivo json.
-    __hoy = time.strftime('%d-%m-%y')
+    __hoy = datetime.today().strftime('%d-%m-%y')
     def Cargar_info(self, CacheFolder):
         """
         Extrae la información que hay en el archivo de tipo .json
