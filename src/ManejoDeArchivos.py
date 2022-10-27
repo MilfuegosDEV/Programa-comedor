@@ -1,7 +1,10 @@
-from datetime import datetime
+from datetime \
+    import datetime
 import os, pandas as pd, shutil, json
-from openpyxl import Workbook, load_workbook
-from tkinter import messagebox, filedialog as fd
+from openpyxl \
+    import Workbook, load_workbook
+from tkinter \
+    import messagebox, filedialog as fd
 
 class xlFiles:
 
@@ -15,7 +18,6 @@ class xlFiles:
         """Nombre del archivo"""
         self.cache = '' 
         """Carpeta con las cédulas registradas durante el día."""
-        self.info = {}  
 
         self.filename = ''
         """Base de datos"""
@@ -36,9 +38,10 @@ class xlFiles:
             Archivo (str): Carpeta de los registros diarios.
         """
         
-        self.__dir = dir
-        self.filename = self.__dir + f"\\{Archivo}"
-        self.foldername = self.__dir + f"\\Reportes\\{datetime.today().strftime('%Y')}"
+        self.dir = dir
+        self.filename = self.dir + f"\\{Archivo}"
+        self.Reports = self.dir + "\\Reportes"
+        self.foldername = self.dir + f"\\Reportes\\{datetime.today().strftime('%Y')}"
 
         # Se se indica el nombre del mes.
         if datetime.today().strftime("%m") == '01':
@@ -75,8 +78,8 @@ class xlFiles:
         except:
             exit()
 
-
-    def VerificacionDeDatos(self) -> bool:
+    @property
+    def VerificacionDeDatos(self) -> bool | dict:
         """Verifica los datos del archivo los cuales deben estan en el siguente formato:
         
             | Cédula | Nombre completo | Sección
@@ -91,7 +94,7 @@ class xlFiles:
         Returns:
             bool: Retornará True en el caso de que toda la información del archivo sea correcta, de lo contrario false.
         """
-
+        info = {}
         try:
             df = pd.read_excel(self.filename)
             # Tomando los datos del archivo
@@ -109,29 +112,29 @@ class xlFiles:
                     # No pueden haber filas vacias entre filas.
 
                     self.__fila = row[0] + 2
-                    messagebox.showerror('Error en fila', f'Revise la fila {self.__fila}\nEl archivo debe tener el siguiente formato\nCédula, Nombre completo y sección.')
-                    os.startfile(self.filename)
+                    messagebox.showerror('', f'Revise la fila {self.__fila} esta debe tener el siguiente formato:\nCédula, Nombre completo y sección (opcional).')
                     return False
                 
                 else:
                     try:
-                        self.info[str(row[1].upper()).strip()] = row[2:4]
+                        info[str(row[1].upper()).strip()] = row[2:4]
                     except AttributeError:
-                        self.info[str(row[1]).strip()] = row[2:4] 
+                        info[str(row[1]).strip()] = row[2:4]
+
 
             
             if df.empty == True:
                 # En el caso de que el archivo este vacio
-                messagebox.showerror('Archivo vacio', f'El archivo no puede estar vacio.\nEl archivo debe tener el siguiente formato\nCédula, Nombre completo y sección.')
-                os.startfile(self.filename)
+                messagebox.showerror('', f'El archivo no puede estar vacio.\nEl archivo debe tener el siguiente formato\nCédula, Nombre completo y sección')
                 return False
             
             # En el caso de que se realice todo con normalidad.
-            return True
+
+            return info
 
         except FileNotFoundError:
             # En el caso de que no se encuentre el archivo
-            messagebox.showerror('Base de datos no encontrada', f'No se ha encontrado el archivo {self.__Archivo}\nPor favor presione abrir para copiar el archivo.')
+            messagebox.showerror('', f'La base de datos no ha sido encontrada por favor mueva esta al la carpeta {self.dir}')
             source = fd.askopenfilename(title = 'Mover',filetypes=(('Excel files', '.xlsx'), ('All', '.')))
             
             __nombre = (source).split("/")
@@ -142,7 +145,7 @@ class xlFiles:
             __archivo = self.__Archivo.split('.')
         
 
-            destination = self.__dir
+            destination = self.dir
 
             if __nombre.title() == __archivo[0].title():
                 try:
@@ -151,12 +154,12 @@ class xlFiles:
                     pass
                 return False
             else:
-                messagebox.showinfo("Nombre incorrecto o formato incorrrecto", f"La base de datos debe tener el nombre {self.__Archivo}")
+                messagebox.showinfo("", f"La base de datos debe tener el nombre {self.__Archivo}")
                 return False
                 
 
         except:
-            messagebox.showerror('Error Inesperado', 'Ha ocurrido un error inesperado.')
+            messagebox.showerror('', 'Ha ocurrido un error inesperado.')
             return False
 
 
@@ -203,7 +206,7 @@ class xlFiles:
 
                 wb = Workbook()
                 ws = wb.active
-                ws.protection.password = 'MySecretKey' # Contraseña de los reportes.
+                ws.protection.password = 'CTPCOMEDOR01' # Contraseña de los reportes.
                 ws.title = 'Registro'
                 ws.append({1:'Cédula',
                            2:'Nombre completo',
@@ -218,12 +221,11 @@ class xlFiles:
                 continue
 
             except PermissionError as e:
-                messagebox.askretrycancel(f'PermissionError', f'{e}\nPor favor cierre el archivo antes de continuar')
+                messagebox.askretrycancel(f'', f'{e}\nPor favor cierre el archivo antes de continuar')
                 continue
 
             except ValueError:
-                messagebox.showwarning(f'Formato incorrecto', 'El archivo debe tener el siguiente formato\nCédula, Nombre completo y sección.')
-                os.startfile(self.filename)
+                messagebox.showwarning(f'', 'El archivo debe tener el siguiente formato\nCédula, Nombre completo y sección.')
                 continue      
 
 
@@ -243,6 +245,7 @@ class Temp:
         try:
             with open(f'{CacheFolder}\\{self.__hoy}.json', 'r') as File:
                 self.tempinfo = json.load(File)
+                File.close()
         except FileNotFoundError:
             self.Editar_info(CacheFolder, self.tempinfo)
 
