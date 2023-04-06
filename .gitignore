@@ -1,6 +1,3 @@
 # trash
-Test/
-src/modules/__pycache__/
 .env/
-.vscode/
 __pycache__/
